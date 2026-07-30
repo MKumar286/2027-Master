@@ -28,29 +28,6 @@ html, body {
     overflow: hidden;
 }
 
-/* ===== REQUIREMENT 2: MULTICOLORED CURSOR FOCUS LIGHT ===== */
-#cursor-light {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: radial-gradient(
-        circle,
-        rgba(255, 0, 128, 0.3) 0%,
-        rgba(0, 212, 255, 0.25) 35%,
-        rgba(255, 215, 0, 0.2) 65%,
-        transparent 100%
-    );
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    mix-blend-mode: multiply;
-    display: none;
-    transition: transform 0.02s ease-out;
-}
-
 /* ===== TOP CONTROLS WRAPPER ===== */
 .top-controls {
     flex-shrink: 0;
@@ -64,7 +41,7 @@ html, body {
 /* ===== CENTERED HEADER ===== */
 .header {
     width: 100%;
-    padding: 14px 20px;
+    padding: 12px 20px;
     background: linear-gradient(135deg, #091e42 0%, #0f2b5c 50%, #16387c 100%);
     border-bottom: 3px solid #ffca28;
     position: relative;
@@ -82,7 +59,7 @@ html, body {
 
 .header h1 {
     color: #ffffff;
-    font-size: 21px;
+    font-size: 20px;
     text-transform: none;
     letter-spacing: 0.3px;
     font-weight: 700;
@@ -90,16 +67,16 @@ html, body {
 }
 
 .header h2 {
-    font-size: 14px;
+    font-size: 13px;
     color: #ffca28;
     font-weight: 600;
     text-transform: none;
-    margin-top: 3px;
+    margin-top: 2px;
 }
 
 .header h3 {
     color: #cbd5e1;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 400;
     text-transform: none;
     margin-top: 2px;
@@ -110,14 +87,14 @@ html, body {
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    padding: 9px 18px;
+    padding: 8px 16px;
     border: none;
     border-radius: 6px;
     background: linear-gradient(135deg, #ff8f00 0%, #ffca28 100%);
     color: #091e42;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: none;
     cursor: pointer;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
@@ -141,7 +118,6 @@ html, body {
 .cards-container {
     width: 100%;
     display: grid;
-    /* Requirement 1: 6 columns to include CGPA Filter Box on the left */
     grid-template-columns: 1.2fr repeat(5, 1fr);
     gap: 0;
     margin: 0;
@@ -152,7 +128,7 @@ html, body {
     padding: 8px 10px;
     border-radius: 0;
     color: white;
-    min-height: 58px;
+    min-height: 56px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -165,7 +141,6 @@ html, body {
     border-right: none;
 }
 
-/* Requirement 1: CGPA Range Filter Box Style */
 .cgpa-filter-card {
     background: linear-gradient(135deg, #0b192c 0%, #1e293b 100%);
     border-left: 4px solid #ffca28;
@@ -230,36 +205,89 @@ html, body {
     color: #ffffff;
 }
 
-/* ===== FILTER TOOLBAR ===== */
+/* ===== SINGLE ROW FILTER TOOLBAR WITH BUTTONS ===== */
 .filter-container {
     width: 100%;
-    display: grid;
-    grid-template-columns: 1.5fr repeat(6, 1fr);
-    gap: 6px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 5px;
     background: #0f172a;
-    padding: 8px 10px;
+    padding: 6px 8px;
     border-radius: 0;
     border: none;
     margin: 0;
+    overflow-x: hidden; /* Ensures strict single-row fitting without scrollbar */
 }
 
-.filter-container input,
-.filter-container select {
-    width: 100%;
-    padding: 7px 10px;
+.filter-container input[type="text"] {
+    flex: 1.3;
+    min-width: 110px;
+    padding: 6px 8px;
     border-radius: 4px;
     border: 1px solid #334155;
     background: #ffffff;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     color: #1e293b;
     outline: none;
 }
 
+.filter-container select {
+    flex: 1;
+    min-width: 85px;
+    padding: 6px 4px;
+    border-radius: 4px;
+    border: 1px solid #334155;
+    background: #ffffff;
+    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #1e293b;
+    outline: none;
+    text-overflow: ellipsis;
+}
+
 .filter-container input:focus,
 .filter-container select:focus {
     border-color: #ff6600;
+}
+
+/* ACTION BUTTONS IN FILTER ROW */
+.action-btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.action-btn:active {
+    transform: scale(0.97);
+}
+
+.reset-btn {
+    background: #e11d48;
+    color: #ffffff;
+}
+
+.reset-btn:hover {
+    background: #be123c;
+}
+
+.export-btn {
+    background: #107c41; /* Official Excel Green */
+    color: #ffffff;
+}
+
+.export-btn:hover {
+    background: #0e6b37;
 }
 
 /* ===== TABLE CONTAINER ===== */
@@ -323,11 +351,10 @@ tr:nth-child(even) td {
     background: #f8fafc;
 }
 
-/* Requirement 2: Multicolored Focus Light Hover Effect on Active Row Movement */
 tr:hover td {
-    background: linear-gradient(90deg, rgba(255, 99, 132, 0.2) 0%, rgba(54, 162, 235, 0.2) 50%, rgba(255, 206, 86, 0.25) 100%);
-    color: #000000;
-    font-weight: 700;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-weight: 600;
 }
 
 .loading {
@@ -339,9 +366,9 @@ tr:hover td {
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
 }
 
-/* ===== REQUIREMENT 3: SOLID ORANGE HORIZONTAL SCROLLBAR ===== */
+/* SOLID ORANGE HORIZONTAL SCROLLBAR */
 .table-container::-webkit-scrollbar {
-    height: 14px; /* Visible height at the end of the screen */
+    height: 14px;
     width: 10px;
 }
 
@@ -351,21 +378,18 @@ tr:hover td {
 }
 
 .table-container::-webkit-scrollbar-thumb {
-    background: #ff6600; /* Solid Vibrant Orange */
+    background: #ff6600;
     border-radius: 4px;
     border: 2px solid #fff0e6;
 }
 
 .table-container::-webkit-scrollbar-thumb:hover {
-    background: #e65c00; /* Deep Solid Orange on Hover */
+    background: #e65c00;
 }
 </style>
 </head>
 
 <body>
-
-<!-- Multicolored Cursor Focus Light Container -->
-<div id="cursor-light"></div>
 
 <div class="top-controls">
 
@@ -382,8 +406,6 @@ tr:hover td {
     <div class="main-wrapper">
         <!-- METRIC CARDS SECTION WITH CGPA RANGE FILTER BOX -->
         <div class="cards-container">
-            
-            <!-- Requirement 1: CGPA Range Box on the Left of Total Students Card -->
             <div class="card cgpa-filter-card">
                 <h3>CGPA Range Filter</h3>
                 <div class="cgpa-inputs">
@@ -415,15 +437,19 @@ tr:hover td {
             </div>
         </div>
 
-        <!-- FILTER TOOLBAR SECTION -->
+        <!-- SINGLE-ROW FILTER TOOLBAR -->
         <div class="filter-container">
-            <input type="text" id="searchInput" placeholder="Search any student data...">
+            <input type="text" id="searchInput" placeholder="Search data...">
             <select id="branchFilter"><option value="">Branch</option></select>
             <select id="backlogFilter"><option value="">No. of Backlogs</option></select>
             <select id="genderFilter"><option value="">Gender</option></select>
             <select id="dsaFilter"><option value="">DSA Training</option></select>
             <select id="registeredFilter"><option value="">Registered for Placements</option></select>
             <select id="offersFilter"><option value="">No. of Offers</option></select>
+            
+            <!-- RESET FILTERS & EXCEL EXPORT BUTTONS -->
+            <button class="action-btn reset-btn" onclick="resetAllFilters()" title="Reset all applied filters">Reset Filters</button>
+            <button class="action-btn export-btn" onclick="exportToExcel()" title="Export filtered rows to Excel">Export Excel</button>
         </div>
     </div>
 
@@ -436,18 +462,6 @@ tr:hover td {
 </div>
 
 <script>
-/* REQUIREMENT 2: MULTICOLORED FOCUS LIGHT CURSOR MOVEMENT LOGIC */
-const cursorLight = document.getElementById("cursor-light");
-document.addEventListener("mousemove", (e) => {
-    cursorLight.style.display = "block";
-    cursorLight.style.left = e.clientX + "px";
-    cursorLight.style.top = e.clientY + "px";
-});
-
-document.addEventListener("mouseleave", () => {
-    cursorLight.style.display = "none";
-});
-
 const csvURL = localStorage.getItem("csvURL");
 
 let originalData = [];
@@ -530,7 +544,7 @@ function fillFilter(filter, column, data){
     });
 }
 
-/* FILTER LOGIC WITH CGPA RANGE REQUIREMENT */
+/* FILTER LOGIC */
 function applyFilters(){
     const search = searchInput.value.toLowerCase();
     const filters = {
@@ -564,7 +578,6 @@ function applyFilters(){
     let filtered = originalData.filter(row => {
         const rowText = row.join(" ").toLowerCase();
 
-        /* REQUIREMENT 1: CGPA Range Logic */
         let rowCgpa = indexes.cgpa !== -1 ? parseFloat(row[indexes.cgpa]) : NaN;
         let passesCgpa = true;
 
@@ -589,6 +602,50 @@ function applyFilters(){
 
     createTable(headers, filtered);
     updateStatistics(filtered);
+}
+
+/* RESET ALL FILTERS LOGIC */
+function resetAllFilters(){
+    searchInput.value = "";
+    branchFilter.value = "";
+    backlogFilter.value = "";
+    genderFilter.value = "";
+    dsaFilter.value = "";
+    registeredFilter.value = "";
+    offersFilter.value = "";
+    minCgpaInput.value = "";
+    maxCgpaInput.value = "";
+    applyFilters();
+}
+
+/* EXPORT TO EXCEL LOGIC */
+function exportToExcel(){
+    const table = document.getElementById("dataTable");
+    if (!table || table.rows.length <= 1) {
+        alert("No filtered data available to export.");
+        return;
+    }
+
+    let csvContent = "";
+    for (let i = 0; i < table.rows.length; i++) {
+        let row = table.rows[i];
+        let rowData = [];
+        for (let j = 0; j < row.cells.length; j++) {
+            let cellText = row.cells[j].innerText.replace(/"/g, '""');
+            rowData.push(`"${cellText}"`);
+        }
+        csvContent += rowData.join(",") + "\n";
+    }
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "Student_Placement_Data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }
 
 /* RENDER TABLE */
