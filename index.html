@@ -4,259 +4,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Placement Portal | MGIT</title>
 
-<title>Student Data Table</title>
+<!-- Modern Typography & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<!-- CSV Parsing Library -->
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
 <style>
-
-/* ===== FULL VIEWPORT FIXED FLEXBOX LAYOUT ===== */
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100vh; /* Lock height to screen size */
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: #f0f4f8;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Prevent body itself from scrolling */
-}
-
+/* ===== GLOBAL RESET & FULL-VIEWPORT LOCK ===== */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* ===== TOP CONTROLS WRAPPER (STAYS FIXED) ===== */
+html, body {
+    width: 100%;
+    height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f1f5f9;
+    color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevents body scrollbar */
+}
+
+/* ===== TOP CONTROLS WRAPPER ===== */
 .top-controls {
-    flex-shrink: 0; /* Prevents this section from shrinking */
-    padding: 0 10px;
+    flex-shrink: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+    z-index: 10;
 }
 
-/* ===== 24K PREMIUM HEADER LAYER ===== */
+/* ===== FULL-BLEED EDGE-TO-EDGE HEADER (NO SIDE GAPS) ===== */
 .header {
     width: 100%;
-    box-sizing: border-box;
-    margin: 4px auto 0 auto;
-    padding: 12px 20px;
-    border-radius: 16px;
-    text-align: center;
+    padding: 16px 28px;
+    background: linear-gradient(135deg, #091e42 0%, #0f2b5c 50%, #16387c 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #ffca28;
     position: relative;
-    background: linear-gradient(135deg, #06163a 0%, #0b2564 50%, #113792 100%);
-    box-shadow:
-        0 10px 25px rgba(6, 22, 58, 0.25),
-        0 4px 10px rgba(0, 0, 0, 0.2),
-        inset 0 0 20px rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.header-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.header h1 {
+    color: #ffffff;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 800;
+}
+
+.header h2 {
+    font-size: 14px;
+    color: #ffca28;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.header h3 {
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 .cgpa-btn {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 10px 16px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     background: linear-gradient(135deg, #ff8f00 0%, #ffca28 100%);
-    color: #06163a;
-    font-weight: 800;
+    color: #091e42;
+    font-family: inherit;
+    font-weight: 700;
     font-size: 12px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 
-        0 4px 12px rgba(255, 143, 0, 0.3),
-        0 2px 0px #c67100;
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(255, 143, 0, 0.25);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .cgpa-btn:hover {
-    transform: translateY(-55%);
-    box-shadow: 0 6px 15px rgba(255, 143, 0, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 143, 0, 0.35);
+    background: linear-gradient(135deg, #ffa000 0%, #ffd54f 100%);
 }
 
 .cgpa-btn:active {
-    transform: translateY(-45%);
+    transform: translateY(0);
 }
 
-.header h1 {
-    margin: 0;
-    color: #ffffff;
-    font-size: 24px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 800;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+/* ===== METRIC CARDS ROW ===== */
+.main-wrapper {
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.header h2 {
-    margin-top: 4px;
-    font-size: 18px;
-    color: #ffca28;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-.header h3 {
-    margin-top: 3px;
-    margin-bottom: 0;
-    color: #dfe9ff;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-/* ===== 3D METALLIC CARDS ===== */
 .cards-container {
     width: 100%;
-    margin-top: 4px;
-    margin-bottom: 4px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
+    gap: 12px;
 }
 
 .card {
-    padding: 6px 10px;
-    border-radius: 12px;
-    text-align: center;
+    padding: 10px 14px;
+    border-radius: 10px;
     color: white;
-    min-height: 55px;
+    min-height: 62px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card::after {
     content: '';
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 50%;
-    background: linear-gradient(rgba(255,255,255,0.12), rgba(255,255,255,0));
+    top: 0; left: 0; width: 100%; height: 40%;
+    background: linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0));
     pointer-events: none;
 }
 
-.card:nth-child(1) { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
-.card:nth-child(2) { background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%); }
-.card:nth-child(3) { background: linear-gradient(135deg, #e65c00 0%, #f9d423 100%); }
-.card:nth-child(4) { background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%); }
-.card:nth-child(5) { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
-    
+.card:nth-child(1) { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+.card:nth-child(2) { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+.card:nth-child(3) { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+.card:nth-child(4) { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); }
+.card:nth-child(5) { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+
 .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.18);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px -2px rgba(0,0,0,0.12);
 }
 
 .card h3 {
     margin: 0;
     font-size: 11px;
-    line-height: 13px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.85);
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .card p {
     margin-top: 2px;
-    margin-bottom: 0;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
-    color: white;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    color: #ffffff;
 }
 
-/* ===== GLASS FILTER CONTAINER ===== */
+/* ===== FILTER BAR CONTAINER ===== */
 .filter-container {
     width: 100%;
-    margin: 2px 0;
-    padding: 6px;
-    display: flex;
-    gap: 6px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: grid;
+    grid-template-columns: 1.5fr repeat(6, 1fr);
+    gap: 8px;
+    background: #f8fafc;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
 }
 
 .filter-container input,
 .filter-container select {
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(0,0,0,0.15);
-    min-width: 170px;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
     background: #ffffff;
+    font-family: inherit;
     font-size: 12px;
-    font-weight: 600;
-    color: #2c3e50;
-    transition: all 0.2s ease;
+    font-weight: 500;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.15s ease;
+}
+
+.filter-container input::placeholder {
+    color: #94a3b8;
 }
 
 .filter-container input:focus,
 .filter-container select:focus {
-    outline: none;
-    border: 2px solid #00b894;
-    box-shadow: 0 0 10px rgba(0, 184, 148, 0.5);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-/* ===== STRETCHED SCROLL CONTAINER ANCHORED AT BOTTOM ===== */
+/* ===== STRETCHED SCROLLABLE TABLE CONTAINER ===== */
 .table-container {
-    flex-grow: 1; /* Automatically uses up remaining screen space down to the edge */
+    flex-grow: 1;
     width: 100%;
-    overflow-x: auto !important; /* Force continuous horizontal visibility */
-    overflow-y: auto !important; /* Internal vertical scrolling */
-    margin: 0;
-    padding: 0 10px 10px 10px;
-    background: #f0f4f8;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    padding: 0 20px 20px 20px;
 }
 
 table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     width: 100%;
-    table-layout: auto;
-    font-size: 13px;
     background: #ffffff;
-    border-radius: 12px 12px 0 0;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    border-radius: 8px;
     border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 th {
-    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-    color: #ffffff;
-    padding: 10px 14px;
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 12px 16px;
     text-align: center;
     white-space: nowrap;
-    position: sticky; /* Keep header tracking correctly during vertical scroll */
+    position: sticky;
     top: 0;
     z-index: 2;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    border-bottom: 2px solid #102a72;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
-
-th:nth-child(even) {
-    background: linear-gradient(135deg, #112233 0%, #223344 100%);
+    border-bottom: 2px solid #334155;
 }
 
 td {
-    padding: 8px 14px;
+    padding: 10px 16px;
     text-align: center;
     white-space: nowrap;
-    border-bottom: 1px solid #eef2f7;
-    font-size: 13px;
-    color: #334e68;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 12.5px;
+    color: #334155;
     font-weight: 500;
-    transition: all 0.15s ease;
+    transition: background 0.1s ease;
+}
+
+tr:last-child td {
+    border-bottom: none;
 }
 
 tr:nth-child(even) td {
@@ -264,105 +263,109 @@ tr:nth-child(even) td {
 }
 
 tr:hover td {
-    background: #e0f2fe;
-    color: #0369a1;
+    background: #eff6ff;
+    color: #1d4ed8;
     font-weight: 600;
 }
 
 .loading {
     text-align: center;
-    margin: 20px auto;
-    font-size: 18px;
-    font-weight: 700;
-    color: #0b2564;
+    padding: 40px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #3b82f6;
 }
 
-/* ===== SCROLLBAR VISUAL DESIGN STYLES ===== */
+/* ===== CUSTOM SCROLLBARS ===== */
 .table-container::-webkit-scrollbar {
-    height: 10px; /* Visible thumb sizing footprint */
-    width: 10px;
+    height: 8px;
+    width: 8px;
 }
 
 .table-container::-webkit-scrollbar-track {
-    background: #e2e8f0;
-    border-radius: 10px;
+    background: #f1f5f9;
 }
 
 .table-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-    border-radius: 10px;
-    border: 2px solid #e2e8f0;
+    background: #cbd5e1;
+    border-radius: 4px;
 }
 
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
 </style>
-
 </head>
 
 <body>
 
 <div class="top-controls">
 
+    <!-- FULL BLEED HEADER -->
     <div class="header">
-        <h1>Mahatma Gandhi Institute of Technology</h1>
-        <button class="cgpa-btn" onclick="goToCGPAAnalysis()">Go for CGPA Analysis</button>
-        <h2>Training & Placement Cell</h2>
-        <h3>Total Students Data for the Academic Year 2026 - 2027</h3>
+        <div class="header-brand">
+            <h1>Mahatma Gandhi Institute of Technology</h1>
+            <h2>Training & Placement Cell</h2>
+            <h3>Academic Year 2026 - 2027</h3>
+        </div>
+        <button class="cgpa-btn" onclick="goToCGPAAnalysis()">CGPA Analysis</button>
     </div>
 
-    <div class="cards-container">
-        <div class="card">
-            <h3>Total Students</h3>
-            <p id="totalStudents">0</p>
+    <div class="main-wrapper">
+        <!-- METRIC CARDS -->
+        <div class="cards-container">
+            <div class="card">
+                <h3>Total Students</h3>
+                <p id="totalStudents">0</p>
+            </div>
+            <div class="card">
+                <h3>Registered for Placements</h3>
+                <p id="registeredStudents">0</p>
+            </div>
+            <div class="card">
+                <h3>Eligible Students</h3>
+                <p id="eligibleStudents">0</p>
+            </div>
+            <div class="card">
+                <h3>Total Students Placed</h3>
+                <p id="placedStudents">0</p>
+            </div>
+            <div class="card">
+                <h3>Total Offers</h3>
+                <p id="totalOffers">0</p>
+            </div>
         </div>
-        <div class="card">
-            <h3>Registered for Placements</h3>
-            <p id="registeredStudents">0</p>
-        </div>
-        <div class="card">
-            <h3>Eligible Students</h3>
-            <p id="eligibleStudents">0</p>
-        </div>
-        <div class="card">
-            <h3>Total Students Placed</h3>
-            <p id="placedStudents">0</p>
-        </div>
-        <div class="card">
-            <h3>Total Offers</h3>
-            <p id="totalOffers">0</p>
-        </div>
-    </div>
 
-    <div class="filter-container">
-        <input type="text" id="searchInput" placeholder="Search Any Data">
-        <select id="branchFilter"><option value="">Branch</option></select>
-        <select id="backlogFilter"><option value="">No. of Backlogs</option></select>
-        <select id="genderFilter"><option value="">Gender</option></select>
-        <select id="dsaFilter"><option value="">DSA Training</option></select>
-        <select id="registeredFilter"><option value="">Registered for Placements</option></select>
-        <select id="offersFilter"><option value="">No. of Offers</option></select>
+        <!-- FILTER TOOLBAR -->
+        <div class="filter-container">
+            <input type="text" id="searchInput" placeholder="🔍 Search any student data...">
+            <select id="branchFilter"><option value="">Branch</option></select>
+            <select id="backlogFilter"><option value="">No. of Backlogs</option></select>
+            <select id="genderFilter"><option value="">Gender</option></select>
+            <select id="dsaFilter"><option value="">DSA Training</option></select>
+            <select id="registeredFilter"><option value="">Registered for Placements</option></select>
+            <select id="offersFilter"><option value="">No. of Offers</option></select>
+        </div>
     </div>
 
 </div>
 
-<div class="loading" id="loading">
-Loading Data...
-</div>
-
+<!-- DATA TABLE AREA -->
 <div class="table-container">
+    <div class="loading" id="loading">Loading Student Placement Data...</div>
     <table id="dataTable"></table>
 </div>
 
 <script>
-
 const csvURL = localStorage.getItem("csvURL");
 
 let originalData = [];
 let headers = [];
 
 Papa.parse(csvURL, {
-    download:true,
-    skipEmptyLines:true,
-    complete:function(results){
+    download: true,
+    skipEmptyLines: true,
+    complete: function(results) {
         if (!results.data || results.data.length === 0) {
             document.getElementById("loading").innerText = "Error: No data found in CSV.";
             return;
@@ -382,7 +385,7 @@ Papa.parse(csvURL, {
     }
 });
 
-/* FILTER IDS */
+/* FILTER ELEMENTS */
 const searchInput = document.getElementById("searchInput");
 const branchFilter = document.getElementById("branchFilter");
 const backlogFilter = document.getElementById("backlogFilter");
@@ -391,34 +394,33 @@ const dsaFilter = document.getElementById("dsaFilter");
 const registeredFilter = document.getElementById("registeredFilter");
 const offersFilter = document.getElementById("offersFilter");
 
-/* EVENTS */
-searchInput.addEventListener("input",applyFilters);
-branchFilter.addEventListener("change",applyFilters);
-backlogFilter.addEventListener("change",applyFilters);
-genderFilter.addEventListener("change",applyFilters);
-dsaFilter.addEventListener("change",applyFilters);
-registeredFilter.addEventListener("change",applyFilters);
-offersFilter.addEventListener("change",applyFilters);
+/* EVENT LISTENERS */
+searchInput.addEventListener("input", applyFilters);
+branchFilter.addEventListener("change", applyFilters);
+backlogFilter.addEventListener("change", applyFilters);
+genderFilter.addEventListener("change", applyFilters);
+dsaFilter.addEventListener("change", applyFilters);
+registeredFilter.addEventListener("change", applyFilters);
+offersFilter.addEventListener("change", applyFilters);
 
-/* POPULATE FILTERS */
+/* POPULATE DROPDOWNS */
 function populateFilters(data){
-    fillFilter(branchFilter,"Branch",data);
-    fillFilter(backlogFilter,"No. of Backlogs",data);
-    fillFilter(genderFilter,"Gender",data);
-    fillFilter(dsaFilter,"DSA",data);
-    fillFilter(registeredFilter,"Registered for Placements",data);
-    fillFilter(offersFilter,"No. of Offers",data);
+    fillFilter(branchFilter, "Branch", data);
+    fillFilter(backlogFilter, "No. of Backlogs", data);
+    fillFilter(genderFilter, "Gender", data);
+    fillFilter(dsaFilter, "DSA", data);
+    fillFilter(registeredFilter, "Registered for Placements", data);
+    fillFilter(offersFilter, "No. of Offers", data);
 }
 
-/* FILL FILTER */
-function fillFilter(filter,column,data){
+function fillFilter(filter, column, data){
     let index = headers.indexOf(column);
     if (index === -1) {
         index = headers.findIndex(h => h.toUpperCase().includes(column.toUpperCase()));
     }
     
     if(index === -1) {
-        filter.innerHTML = `<option value="">${column} (Not Found)</option>`;
+        filter.innerHTML = `<option value="">${column} (N/A)</option>`;
         return; 
     }
 
@@ -428,12 +430,12 @@ function fillFilter(filter,column,data){
     const displayTitle = column === "DSA" ? "DSA Training" : column;
     filter.innerHTML = `<option value="">${displayTitle}</option>`;
 
-    values.sort().forEach(value=>{
+    values.sort().forEach(value => {
         filter.innerHTML += `<option value="${value}">${value}</option>`;
     });
 }
 
-/* APPLY FILTERS */
+/* FILTER LOGIC */
 function applyFilters(){
     const search = searchInput.value.toLowerCase();
     const filters = {
@@ -461,50 +463,44 @@ function applyFilters(){
         cgpa: headers.indexOf("CGPA")
     };
 
-    let filtered = originalData.filter(row=>{
+    let filtered = originalData.filter(row => {
         const rowText = row.join(" ").toLowerCase();
         return (
-            rowText.includes(search)
-            &&
-            (indexes.branch === -1 || !filters.branch || row[indexes.branch] === filters.branch)
-            &&
-            (indexes.backlog === -1 || !filters.backlog || row[indexes.backlog] === filters.backlog)
-            &&
-            (indexes.gender === -1 || !filters.gender || row[indexes.gender] === filters.gender)
-            &&
-            (indexes.dsa === -1 || !filters.dsa || row[indexes.dsa] === filters.dsa)
-            &&
-            (indexes.registered === -1 || !filters.registered || 
-            String(row[indexes.registered]).toLowerCase().trim() === filters.registered.toLowerCase().trim())
-            &&
+            rowText.includes(search) &&
+            (indexes.branch === -1 || !filters.branch || row[indexes.branch] === filters.branch) &&
+            (indexes.backlog === -1 || !filters.backlog || row[indexes.backlog] === filters.backlog) &&
+            (indexes.gender === -1 || !filters.gender || row[indexes.gender] === filters.gender) &&
+            (indexes.dsa === -1 || !filters.dsa || row[indexes.dsa] === filters.dsa) &&
+            (indexes.registered === -1 || !filters.registered || String(row[indexes.registered]).toLowerCase().trim() === filters.registered.toLowerCase().trim()) &&
             (indexes.offers === -1 || !filters.offers || row[indexes.offers] === filters.offers)
         );
     });
 
-    createTable(headers,filtered);
+    createTable(headers, filtered);
     updateStatistics(filtered);
 }
 
-/* CREATE TABLE */
-function createTable(headers,rows){
-    let tableHTML = "<tr>";
-    headers.forEach(header=>{
+/* RENDER TABLE */
+function createTable(headers, rows){
+    let tableHTML = "<thead><tr>";
+    headers.forEach(header => {
         tableHTML += `<th>${header}</th>`;
     });
-    tableHTML += "</tr>";
+    tableHTML += "</tr></thead><tbody>";
 
-    rows.forEach(row=>{
+    rows.forEach(row => {
         tableHTML += "<tr>";
-        row.forEach(cell=>{
+        row.forEach(cell => {
             tableHTML += `<td>${cell}</td>`;
         });
         tableHTML += "</tr>";
     });
+    tableHTML += "</tbody>";
 
     document.getElementById("dataTable").innerHTML = tableHTML;
 }
 
-/* UPDATE STATISTICS */
+/* CALCULATE STATISTICS */
 function updateStatistics(data){
     const indexes = {
         cgpa: headers.indexOf("CGPA"),
@@ -514,23 +510,23 @@ function updateStatistics(data){
 
     const totalStudents = data.length;
 
-    const placedStudents = data.filter(row=>{
+    const placedStudents = data.filter(row => {
         if (indexes.offers === -1) return false;
         const offers = row[indexes.offers];
         return offers !== "" && offers != null && Number(offers) > 0;
     }).length;
 
-    const totalOffers = data.reduce((sum,row)=>{
+    const totalOffers = data.reduce((sum, row) => {
         if (indexes.offers === -1) return sum;
         return sum + (Number(row[indexes.offers]) || 0);
-    },0);
+    }, 0);
 
-    const registeredStudents = data.filter(row=>{
+    const registeredStudents = data.filter(row => {
         if (indexes.registered === -1) return false;
         return String(row[indexes.registered]).toLowerCase().trim() === "yes";
     }).length;
 
-    const eligibleStudents = data.filter(row=>{
+    const eligibleStudents = data.filter(row => {
         if (indexes.cgpa === -1 || indexes.registered === -1) return false;
         const cgpa = parseFloat(row[indexes.cgpa]) || 0;
         const registered = String(row[indexes.registered]).toLowerCase().trim();
@@ -547,7 +543,6 @@ function updateStatistics(data){
 function goToCGPAAnalysis(){
     window.location.href = "cgpa.html";
 }
-
 </script>
 
 </body>
