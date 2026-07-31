@@ -217,7 +217,7 @@ html, body {
     border-radius: 0;
     border: none;
     margin: 0;
-    overflow-x: hidden; /* Ensures strict single-row fitting without scrollbar */
+    overflow-x: hidden;
 }
 
 .filter-container input[type="text"] {
@@ -282,7 +282,7 @@ html, body {
 }
 
 .export-btn {
-    background: #107c41; /* Official Excel Green */
+    background: #107c41;
     color: #ffffff;
 }
 
@@ -462,7 +462,8 @@ tr:hover td {
 </div>
 
 <script>
-const csvURL = localStorage.getItem("csvURL");
+/* DIRECT GOOGLE SHEET CSV LINK INTEGRATION */
+const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRs918b9wOBmLLA6UJDOtpHMHNuNnzxYCYUIoYd5sIXg-sEkiYZtuNKYo8vEN4d7qWTpDoOvMWq7Cxc/pub?gid=981950419&single=true&output=csv";
 
 let originalData = [];
 let headers = [];
