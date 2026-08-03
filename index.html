@@ -141,7 +141,7 @@ html, body {
     border-radius: 3px;
     border: 1px solid #ffca28;
     background: #ffffff;
-    color: #0f172a;
+    color: #000000; /* THICKER BLACK COLOR FOR CGPA INPUTS */
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     font-size: 11px;
     font-weight: 700;
@@ -205,8 +205,8 @@ html, body {
     background: #ffffff;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     font-size: 11px;
-    font-weight: 500;
-    color: #1e293b;
+    font-weight: 700; /* THICKER BLACK FONT FOR FILTERS */
+    color: #000000;   /* SOLID BLACK */
     outline: none;
 }
 
@@ -219,8 +219,8 @@ html, body {
     background: #ffffff;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     font-size: 11px;
-    font-weight: 500;
-    color: #1e293b;
+    font-weight: 700; /* THICKER BLACK FONT FOR FILTERS */
+    color: #000000;   /* SOLID BLACK */
     outline: none;
     text-overflow: ellipsis;
 }
@@ -285,7 +285,7 @@ table {
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
 }
 
-/* GOOGLE SHEETS HEADER BEHAVIOR */
+/* HEADER BEHAVIOR */
 th {
     background: #1e293b;
     color: #ffffff;
@@ -295,9 +295,9 @@ th {
     text-align: center;
     vertical-align: middle;
     
-    /* Text Wrapping Rules (Matches Google Sheets) */
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
+    /* Single Row without Wrapping */
+    white-space: nowrap;
+    overflow-wrap: normal;
     word-break: normal;
     text-overflow: clip;
     overflow: visible;
@@ -323,19 +323,26 @@ th:last-child {
     border-right: none;
 }
 
-/* DATA CELL BEHAVIOR MATCHING HEADERS */
+/* DATA CELL BEHAVIOR */
 td {
     padding: 6px 10px;
     text-align: center;
     vertical-align: middle;
-    white-space: normal;
-    overflow-wrap: break-word;
+    
+    /* Single row without wrapping */
+    white-space: nowrap;
+    overflow-wrap: normal;
     word-break: normal;
+    
     border-bottom: 1px solid #e2e8f0;
     border-right: 1px solid #f1f5f9;
     font-size: 11px;
-    color: #334155;
-    font-weight: 500;
+    
+    /* SOLID WHITE BACKGROUND & THICK BLACK FONT */
+    background-color: #ffffff !important;
+    color: #000000;
+    font-weight: 600;
+    
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     line-height: 1.3;
     transition: background-color 0.15s ease, color 0.15s ease;
@@ -345,12 +352,13 @@ td:last-child {
     border-right: none;
 }
 
+/* Ensuring solid white background across all alternating rows */
 tr:nth-child(even) td {
-    background: #f8fafc;
+    background-color: #ffffff !important;
 }
 
 tr:hover td {
-    background: #e0f2fe;
+    background-color: #e0f2fe !important;
     color: #0369a1;
 }
 
@@ -437,7 +445,7 @@ tr:hover td {
         <div class="filter-container">
             <input type="text" id="searchInput" placeholder="Search data...">
             <select id="branchFilter"><option value="">Branch</option></select>
-            <select id="backlogFilter"><option value="">No. of Backlogs</option></select>
+            <select id="entranceFilter"><option value="">Entrance</option></select> <!-- REPLACED BACKLOG WITH ENTRANCE -->
             <select id="genderFilter"><option value="">Gender</option></select>
             <select id="dsaFilter"><option value="">DSA Training</option></select>
             <select id="registeredFilter"><option value="">Registered for Placements</option></select>
@@ -490,7 +498,7 @@ Papa.parse(csvURL, {
 /* FILTER ELEMENTS */
 const searchInput = document.getElementById("searchInput");
 const branchFilter = document.getElementById("branchFilter");
-const backlogFilter = document.getElementById("backlogFilter");
+const entranceFilter = document.getElementById("entranceFilter"); /* CHANGED FROM BACKLOG TO ENTRANCE */
 const genderFilter = document.getElementById("genderFilter");
 const dsaFilter = document.getElementById("dsaFilter");
 const registeredFilter = document.getElementById("registeredFilter");
@@ -501,7 +509,7 @@ const maxCgpaInput = document.getElementById("maxCgpa");
 /* EVENT LISTENERS */
 searchInput.addEventListener("input", applyFilters);
 branchFilter.addEventListener("change", applyFilters);
-backlogFilter.addEventListener("change", applyFilters);
+entranceFilter.addEventListener("change", applyFilters); /* CHANGED FROM BACKLOG TO ENTRANCE */
 genderFilter.addEventListener("change", applyFilters);
 dsaFilter.addEventListener("change", applyFilters);
 registeredFilter.addEventListener("change", applyFilters);
@@ -512,7 +520,7 @@ maxCgpaInput.addEventListener("input", applyFilters);
 /* DYNAMICALLY POPULATE DROPDOWNS BASED ON GOOGLE SHEET HEADERS */
 function populateFilters(data){
     fillFilter(branchFilter, "Branch", data);
-    fillFilter(backlogFilter, "No. of Backlogs", data);
+    fillFilter(entranceFilter, "Entrance", data); /* CHANGED FROM BACKLOG TO ENTRANCE */
     fillFilter(genderFilter, "Gender", data);
     fillFilter(dsaFilter, "DSA", data);
     fillFilter(registeredFilter, "Registered for Placements", data);
@@ -547,7 +555,7 @@ function applyFilters(){
     const search = searchInput.value.toLowerCase();
     const filters = {
         branch: branchFilter.value,
-        backlog: backlogFilter.value,
+        entrance: entranceFilter.value, /* CHANGED FROM BACKLOG TO ENTRANCE */
         gender: genderFilter.value,
         dsa: dsaFilter.value,
         registered: registeredFilter.value,
@@ -565,7 +573,7 @@ function applyFilters(){
 
     const indexes = {
         branch: getIdx("Branch"),
-        backlog: getIdx("No. of Backlogs"),
+        entrance: getIdx("Entrance"), /* CHANGED FROM BACKLOG TO ENTRANCE */
         gender: getIdx("Gender"),
         dsa: getIdx("DSA"),
         registered: getIdx("Registered for Placements"),
@@ -590,7 +598,7 @@ function applyFilters(){
             rowText.includes(search) &&
             passesCgpa &&
             (indexes.branch === -1 || !filters.branch || row[indexes.branch] === filters.branch) &&
-            (indexes.backlog === -1 || !filters.backlog || row[indexes.backlog] === filters.backlog) &&
+            (indexes.entrance === -1 || !filters.entrance || row[indexes.entrance] === filters.entrance) &&
             (indexes.gender === -1 || !filters.gender || row[indexes.gender] === filters.gender) &&
             (indexes.dsa === -1 || !filters.dsa || row[indexes.dsa] === filters.dsa) &&
             (indexes.registered === -1 || !filters.registered || String(row[indexes.registered]).toLowerCase().trim() === filters.registered.toLowerCase().trim()) &&
@@ -606,7 +614,7 @@ function applyFilters(){
 function resetAllFilters(){
     searchInput.value = "";
     branchFilter.value = "";
-    backlogFilter.value = "";
+    entranceFilter.value = ""; /* CHANGED FROM BACKLOG TO ENTRANCE */
     genderFilter.value = "";
     dsaFilter.value = "";
     registeredFilter.value = "";
