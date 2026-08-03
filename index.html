@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
 <style>
-/* ===== GLOBAL RESET & FULL-VIEWPORT LOCK ===== */
+/* ===== GLOBAL RESET & LOCKED VIEWPORT ===== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -25,23 +25,24 @@ html, body {
     color: #0f172a;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: hidden; /* LOCKS BODY TO VIEWPORT */
 }
 
-/* ===== TOP CONTROLS WRAPPER ===== */
+/* ===== FIXED TOP CONTROLS (HEADER + CARDS + FILTERS) ===== */
 .top-controls {
-    flex-shrink: 0;
+    flex-shrink: 0; /* PREVENTS STATS/FILTERS FROM SCROLLING OR SHRINKING */
     width: 100%;
     background: #ffffff;
     z-index: 10;
     margin: 0;
     padding: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* ===== CENTERED HEADER ===== */
 .header {
     width: 100%;
-    padding: 10px 15px;
+    padding: 8px 12px;
     background: linear-gradient(135deg, #091e42 0%, #0f2b5c 50%, #16387c 100%);
     border-bottom: 3px solid #ffca28;
     text-align: center;
@@ -58,7 +59,7 @@ html, body {
 
 .header h1 {
     color: #ffffff;
-    font-size: 19px;
+    font-size: 18px;
     text-transform: none;
     letter-spacing: 0.3px;
     font-weight: 700;
@@ -66,16 +67,16 @@ html, body {
 }
 
 .header h2 {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #ffca28;
     font-weight: 600;
     text-transform: none;
-    margin-top: 2px;
+    margin-top: 1px;
 }
 
 .header h3 {
     color: #cbd5e1;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 400;
     text-transform: none;
     margin-top: 1px;
@@ -90,21 +91,21 @@ html, body {
     gap: 0;
 }
 
-/* ===== METRIC CARDS & CGPA RANGE BOX (UPDATED GRID: 5 CARDS TOTAL) ===== */
+/* ===== METRIC CARDS & RANGE FILTERS (6 COLUMNS) ===== */
 .cards-container {
     width: 100%;
     display: grid;
-    grid-template-columns: 1.1fr repeat(4, 1fr);
+    grid-template-columns: 1.1fr 1.1fr repeat(4, 1fr);
     gap: 0;
     margin: 0;
     padding: 0;
 }
 
 .card {
-    padding: 6px 8px;
+    padding: 5px 6px;
     border-radius: 0;
     color: white;
-    min-height: 50px;
+    min-height: 48px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -117,17 +118,17 @@ html, body {
     border-right: none;
 }
 
-.cgpa-filter-card {
+.range-filter-card {
     background: linear-gradient(135deg, #0b192c 0%, #1e293b 100%);
-    border-left: 4px solid #ffca28;
+    border-left: 3px solid #ffca28;
 }
 
-.cgpa-filter-card h3 {
+.range-filter-card h3 {
     color: #ffca28;
     margin-bottom: 2px;
 }
 
-.cgpa-inputs {
+.range-inputs {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -135,39 +136,39 @@ html, body {
     margin-top: 1px;
 }
 
-.cgpa-inputs input {
-    width: 42%;
-    padding: 2px 4px;
+.range-inputs input {
+    width: 44%;
+    padding: 2px 3px;
     border-radius: 3px;
     border: 1px solid #ffca28;
     background: #ffffff;
     color: #000000;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     text-align: center;
     outline: none;
 }
 
-.cgpa-inputs input:focus {
+.range-inputs input:focus {
     border-color: #00e676;
     box-shadow: 0 0 4px rgba(0, 230, 118, 0.6);
 }
 
-.cgpa-inputs span {
+.range-inputs span {
     color: #ffffff;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 10px;
 }
 
-.card:nth-child(2) { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
-.card:nth-child(3) { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
-.card:nth-child(4) { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
-.card:nth-child(5) { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); }
+.card:nth-child(3) { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+.card:nth-child(4) { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+.card:nth-child(5) { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+.card:nth-child(6) { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); }
 
 .card h3 {
     margin: 0;
-    font-size: 10.5px;
+    font-size: 10px;
     color: rgba(255, 255, 255, 0.9);
     font-weight: 600;
     text-transform: none;
@@ -175,35 +176,37 @@ html, body {
 
 .card p {
     margin-top: 1px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: #ffffff;
 }
 
-/* ===== SINGLE ROW FILTER TOOLBAR (UPDATED DROPDOWN THICKNESS) ===== */
+/* ===== PERFECTLY FITTED SINGLE ROW FILTER TOOLBAR ===== */
 .filter-container {
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 4px;
+    justify-content: space-between;
+    gap: 3px;
     background: #0f172a;
-    padding: 5px 6px;
+    padding: 4px 6px;
     border-radius: 0;
     border: none;
     margin: 0;
-    overflow-x: hidden;
+    overflow-x: hidden; /* FIT WITHOUT SCROLLING */
+    box-sizing: border-box;
 }
 
 .filter-container input[type="text"] {
     flex: 1.2;
-    min-width: 100px;
-    padding: 5px 6px;
+    min-width: 0; /* ALLOWS FLEX SHRINK TO FIT WINDOW */
+    padding: 4px 5px;
     border-radius: 3px;
     border: 1.5px solid #475569;
     background: #ffffff;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     color: #000000;
     outline: none;
@@ -211,15 +214,15 @@ html, body {
 
 .filter-container select {
     flex: 1;
-    min-width: 80px;
-    padding: 5px 4px;
+    min-width: 0; /* ALLOWS FLEX SHRINK TO FIT WINDOW */
+    padding: 4px 2px;
     border-radius: 3px;
-    border: 1.5px solid #475569; /* ADDED EXTRA THICKNESS TO DROPDOWN BORDER */
+    border: 1.5px solid #475569;
     background: #ffffff;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    font-size: 11px;
-    font-weight: 800; /* ADDED THICKNESS TO DROPDOWN TEXT */
-    color: #000000;   /* SOLID THICK BLACK */
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #000000;
     outline: none;
     text-overflow: ellipsis;
 }
@@ -236,11 +239,11 @@ html, body {
 }
 
 .action-btn {
-    padding: 5px 8px;
+    padding: 4px 6px;
     border: none;
     border-radius: 3px;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
@@ -270,12 +273,12 @@ html, body {
     background: #0e6b37;
 }
 
-/* ===== TABLE CONTAINER & HEADERS ===== */
+/* ===== TABLE CONTAINER (INDEPENDENT VERTICAL SCROLL) ===== */
 .table-container {
-    flex-grow: 1;
+    flex-grow: 1; /* EXPANDS TO FILL REMAINING SPACE */
     width: 100%;
     overflow-x: auto !important;
-    overflow-y: auto !important;
+    overflow-y: auto !important; /* INDEPENDENT SCROLL FOR DATA ONLY */
     padding: 0;
     margin: 0;
     background: #ffffff;
@@ -317,7 +320,7 @@ th:last-child {
     border-right: none;
 }
 
-/* DATA CELL BEHAVIOR (DECREASED BOLDNESS TO FONT-WEIGHT: 500) */
+/* DATA CELL BEHAVIOR */
 td {
     padding: 6px 10px;
     text-align: center;
@@ -330,7 +333,7 @@ td {
     font-size: 11px;
     background-color: #ffffff !important;
     color: #000000;
-    font-weight: 500; /* MODERATED BOLDNESS */
+    font-weight: 500;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     line-height: 1.3;
     transition: background-color 0.15s ease, color 0.15s ease;
@@ -383,6 +386,7 @@ tr:hover td {
 
 <body>
 
+<!-- FIXED TOP CONTROLS SECTION -->
 <div class="top-controls">
 
     <!-- CENTERED HEADER -->
@@ -395,14 +399,23 @@ tr:hover td {
     </div>
 
     <div class="main-wrapper">
-        <!-- METRIC CARDS SECTION (REGISTERED CARD REMOVED) -->
+        <!-- METRIC CARDS & RANGE FILTERS (CGPA AND RANK IN SAME ROW) -->
         <div class="cards-container">
-            <div class="card cgpa-filter-card">
+            <div class="card range-filter-card">
                 <h3>CGPA Range Filter</h3>
-                <div class="cgpa-inputs">
+                <div class="range-inputs">
                     <input type="number" id="minCgpa" placeholder="Min" step="0.1" min="0" max="10">
                     <span>-</span>
                     <input type="number" id="maxCgpa" placeholder="Max" step="0.1" min="0" max="10">
+                </div>
+            </div>
+
+            <div class="card range-filter-card">
+                <h3>Rank Range Filter</h3>
+                <div class="range-inputs">
+                    <input type="number" id="minRank" placeholder="Min" min="1">
+                    <span>-</span>
+                    <input type="number" id="maxRank" placeholder="Max" min="1">
                 </div>
             </div>
 
@@ -424,7 +437,7 @@ tr:hover td {
             </div>
         </div>
 
-        <!-- SINGLE-ROW FILTER TOOLBAR -->
+        <!-- SINGLE-ROW FILTER TOOLBAR FITTED TO WINDOW -->
         <div class="filter-container">
             <input type="text" id="searchInput" placeholder="Search data...">
             <select id="branchFilter"><option value="">Branch</option></select>
@@ -441,7 +454,7 @@ tr:hover td {
 
 </div>
 
-<!-- DATA TABLE SECTION -->
+<!-- DATA TABLE SECTION (SCROLLABLE) -->
 <div class="table-container">
     <div class="loading" id="loading">Loading Student Placement Data...</div>
     <table id="dataTable"></table>
@@ -490,11 +503,15 @@ Papa.parse(csvURL, {
 const searchInput = document.getElementById("searchInput");
 const minCgpaInput = document.getElementById("minCgpa");
 const maxCgpaInput = document.getElementById("maxCgpa");
+const minRankInput = document.getElementById("minRank");
+const maxRankInput = document.getElementById("maxRank");
 
 /* EVENT LISTENERS */
 searchInput.addEventListener("input", applyFilters);
 minCgpaInput.addEventListener("input", applyFilters);
 maxCgpaInput.addEventListener("input", applyFilters);
+minRankInput.addEventListener("input", applyFilters);
+maxRankInput.addEventListener("input", applyFilters);
 
 filterConfigs.forEach(cfg => {
     const el = document.getElementById(cfg.id);
@@ -509,7 +526,7 @@ function getHeaderIndex(target) {
     let idx = headers.findIndex(h => String(h).trim().toLowerCase() === target.trim().toLowerCase());
     if (idx !== -1) return idx;
 
-    // 2. Fallback Alias Map
+    // 2. Alias Map
     const aliases = {
         "Branch": ["branch", "dept", "department"],
         "Entrance": ["entrance", "entry", "exam"],
@@ -517,7 +534,8 @@ function getHeaderIndex(target) {
         "DSA": ["dsa", "dsa training"],
         "Registered for Placements": ["registered for placement", "registered for placements", "registered", "placement registration"],
         "No. of Offers": ["no. of offers", "no of offers", "number of offers", "offers", "total offers"],
-        "CGPA": ["cgpa", "gpa", "marks"]
+        "CGPA": ["cgpa", "gpa", "marks"],
+        "Rank": ["rank", "eamcet rank", "ecet rank", "entrance rank"]
     };
 
     const targetKey = Object.keys(aliases).find(k => k.toLowerCase() === target.toLowerCase()) || target;
@@ -531,11 +549,15 @@ function getHeaderIndex(target) {
     return -1;
 }
 
-/* GET ACTIVE ROWS FILTERED BY ALL FILTERS EXCEPT ONE SPECIFIC DROPDOWN (FOR DYNAMIC CASCADING) */
+/* GET ACTIVE ROWS FILTERED BY ALL FILTERS EXCEPT ONE SPECIFIC DROPDOWN */
 function getFilteredRowsExcluding(excludeKey = null) {
     const search = searchInput.value.toLowerCase();
+    
     const minCgpaVal = minCgpaInput.value !== "" ? parseFloat(minCgpaInput.value) : null;
     const maxCgpaVal = maxCgpaInput.value !== "" ? parseFloat(maxCgpaInput.value) : null;
+
+    const minRankVal = minRankInput.value !== "" ? parseFloat(minRankInput.value) : null;
+    const maxRankVal = maxRankInput.value !== "" ? parseFloat(maxRankInput.value) : null;
 
     const selectedValues = {};
     filterConfigs.forEach(cfg => {
@@ -544,6 +566,7 @@ function getFilteredRowsExcluding(excludeKey = null) {
     });
 
     const cgpaIdx = getHeaderIndex("CGPA");
+    const rankIdx = getHeaderIndex("Rank");
 
     return originalData.filter(row => {
         // Global search filter
@@ -560,7 +583,19 @@ function getFilteredRowsExcluding(excludeKey = null) {
             }
         }
 
-        // Apply all dropdown filters EXCEPT excludeKey
+        // Rank Range filter
+        if (rankIdx !== -1) {
+            let rawRankStr = String(row[rankIdx] || "").replace(/[^0-9.]/g, '');
+            let rowRank = parseFloat(rawRankStr);
+            if (!isNaN(rowRank)) {
+                if (minRankVal !== null && rowRank < minRankVal) return false;
+                if (maxRankVal !== null && rowRank > maxRankVal) return false;
+            } else if (minRankVal !== null || maxRankVal !== null) {
+                return false;
+            }
+        }
+
+        // Apply dropdown filters EXCEPT excludeKey
         for (let cfg of filterConfigs) {
             if (cfg.key === excludeKey) continue;
             const val = selectedValues[cfg.key];
@@ -577,7 +612,7 @@ function getFilteredRowsExcluding(excludeKey = null) {
     });
 }
 
-/* DYNAMICALLY UPDATE ALL DROPDOWN OPTIONS BASED ON CURRENTLY APPLIED FILTERS */
+/* DYNAMICALLY UPDATE DROPDOWN OPTIONS */
 function updateDynamicFilterDropdowns() {
     filterConfigs.forEach(cfg => {
         const selectEl = document.getElementById(cfg.id);
@@ -591,26 +626,21 @@ function updateDynamicFilterDropdowns() {
             return;
         }
 
-        // Compute valid rows matching all OTHER filters
         const matchingRows = getFilteredRowsExcluding(cfg.key);
 
-        // Extract available options from matching rows
         let uniqueVals = [...new Set(matchingRows.map(r => String(r[colIdx] || "").trim()))]
             .filter(v => v !== undefined && v !== null && v !== "");
 
-        // Preserve current user selection if still present
         if (currentValue && !uniqueVals.some(v => v.toLowerCase() === currentValue.toLowerCase())) {
             uniqueVals.push(currentValue);
         }
 
-        // Sort unique options
         uniqueVals.sort((a, b) => {
             const numA = Number(a), numB = Number(b);
             if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
             return a.localeCompare(b);
         });
 
-        // Re-render HTML options
         const actualHeaderName = headers[colIdx] || cfg.header;
         let optionsHTML = `<option value="">${actualHeaderName}</option>`;
         uniqueVals.forEach(val => {
@@ -624,13 +654,8 @@ function updateDynamicFilterDropdowns() {
 
 /* MAIN APPLY FILTERS LOGIC */
 function applyFilters(){
-    // 1. Update dropdown choices based on cross-filtering
     updateDynamicFilterDropdowns();
-
-    // 2. Get dataset matching ALL filters
     const filtered = getFilteredRowsExcluding(null);
-
-    // 3. Render Table & Metrics
     createTable(headers, filtered);
     updateStatistics(filtered);
 }
@@ -640,6 +665,8 @@ function resetAllFilters(){
     searchInput.value = "";
     minCgpaInput.value = "";
     maxCgpaInput.value = "";
+    minRankInput.value = "";
+    maxRankInput.value = "";
     
     filterConfigs.forEach(cfg => {
         const el = document.getElementById(cfg.id);
@@ -649,32 +676,42 @@ function resetAllFilters(){
     applyFilters();
 }
 
-/* EXPORT TO EXCEL LOGIC */
+/* EXPORT TO EXCEL LOGIC (FIXED PROTECTED VIEW & COMPATIBILITY ISSUES WITH UTF-8 BOM) */
 function exportToExcel(){
-    const table = document.getElementById("dataTable");
-    if (!table || table.rows.length <= 1) {
+    const filtered = getFilteredRowsExcluding(null);
+    if (!filtered || filtered.length === 0) {
         alert("No filtered data available to export.");
         return;
     }
 
-    let csvContent = "";
-    for (let i = 0; i < table.rows.length; i++) {
-        let row = table.rows[i];
-        let rowData = [];
-        for (let j = 0; j < row.cells.length; j++) {
-            let cellText = row.cells[j].innerText.replace(/"/g, '""');
-            rowData.push(`"${cellText}"`);
-        }
-        csvContent += rowData.join(",") + "\n";
-    }
+    let csvLines = [];
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    // Header Row with clean CSV formatting
+    let headerRow = headers.map(h => `"${String(h).replace(/"/g, '""')}"`).join(",");
+    csvLines.push(headerRow);
+
+    // Data Rows
+    filtered.forEach(row => {
+        let rowData = row.map(cell => {
+            let cellText = (cell !== undefined && cell !== null) ? String(cell).replace(/"/g, '""') : "";
+            return `"${cellText}"`;
+        });
+        csvLines.push(rowData.join(","));
+    });
+
+    let csvContent = csvLines.join("\r\n");
+
+    // Add Byte Order Mark (BOM) '\uFEFF' to force Excel to open the file as UTF-8 directly without warnings or protected view errors
+    const BOM = "\uFEFF";
+    const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
+    
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", "Student_Placement_Data.csv");
     document.body.appendChild(link);
     link.click();
+    
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
@@ -699,29 +736,25 @@ function createTable(headers, rows){
     document.getElementById("dataTable").innerHTML = tableHTML;
 }
 
-/* CALCULATE STATISTICS BASED ON NEW STRICT NUMERICAL RULES */
+/* CALCULATE STATISTICS */
 function updateStatistics(data){
     const cgpaIdx = getHeaderIndex("CGPA");
     const offersIdx = getHeaderIndex("No. of Offers");
 
-    // 1. Total Students
     const totalStudents = data.length;
 
-    // 2. Eligible Students = Counts only Numerical Values rows from CGPA Column
     const eligibleStudents = data.filter(row => {
         if (cgpaIdx === -1) return false;
         const val = parseFloat(row[cgpaIdx]);
         return !isNaN(val) && isFinite(val);
     }).length;
 
-    // 3. Total Students Placed = Count of Numeric rows from No. of Offers Column
     const placedStudents = data.filter(row => {
         if (offersIdx === -1) return false;
         const val = parseFloat(row[offersIdx]);
         return !isNaN(val) && isFinite(val) && val > 0;
     }).length;
 
-    // 4. Total Offers = Sum of all Numeric Values from No. of Offers Column
     const totalOffers = data.reduce((sum, row) => {
         if (offersIdx === -1) return sum;
         const val = parseFloat(row[offersIdx]);
