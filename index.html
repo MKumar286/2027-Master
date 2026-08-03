@@ -10,7 +10,40 @@
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
 <style>
-/* ===== GLOBAL RESET & LOCKED VIEWPORT ===== */
+/* ==========================================================================
+   1. CSS VARIABLES & METRONIC/POWER-BI THEME RESET
+   ========================================================================== */
+:root {
+    --primary: #0f2b5c;
+    --primary-gradient: linear-gradient(135deg, #091e42 0%, #0f2b5c 50%, #16387c 100%);
+    --accent-gold: #ffca28;
+    --accent-green: #10b981;
+    --accent-blue: #3b82f6;
+    --accent-purple: #6366f1;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+    --border-focus: #3b82f6;
+    
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-white: #ffffff;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    
+    --control-height: 34px;
+    --font-sans: 'Tahoma', Geneva, Verdana, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -20,242 +53,276 @@
 html, body {
     width: 100%;
     height: 100vh;
-    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    background-color: #ffffff;
-    color: #0f172a;
+    font-family: var(--font-sans);
+    background-color: var(--bg-body);
+    color: var(--text-main);
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* ABSOLUTE LOCK ON SCREEN SCROLLING */
+    overflow: hidden; /* Lock main body viewport */
 }
 
-/* ===== FIXED TOP CONTROLS SECTION ===== */
+/* ==========================================================================
+   2. HEADER BAR
+   ========================================================================== */
+.header {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 6px 16px;
+    background: var(--primary-gradient);
+    border-bottom: 3px solid var(--accent-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-md);
+    z-index: 20;
+}
+
+.header-brand h1 {
+    color: var(--text-white);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+}
+
+.header-brand h2 {
+    font-size: 11px;
+    color: var(--accent-gold);
+    font-weight: 600;
+}
+
+.header-badge {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 3px 10px;
+    border-radius: 20px;
+    color: #cbd5e1;
+    font-size: 10.5px;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+}
+
+/* ==========================================================================
+   3. TOP FIXED SECTION (STATS + FILTERS)
+   ========================================================================== */
 .top-controls {
     flex-shrink: 0;
     width: 100%;
     background: #ffffff;
-    z-index: 10;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    z-index: 15;
 }
 
-/* ===== HEADER ===== */
-.header {
-    width: 100%;
-    padding: 4px 8px;
-    background: linear-gradient(135deg, #091e42 0%, #0f2b5c 50%, #16387c 100%);
-    border-bottom: 2px solid #ffca28;
-    text-align: center;
-    margin: 0;
-}
-
-.header-brand {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-}
-
-.header h1 {
-    color: #ffffff;
-    font-size: 15px;
-    text-transform: none;
-    letter-spacing: 0.2px;
-    font-weight: 700;
-    margin: 0;
-}
-
-.header h2 {
-    font-size: 10.5px;
-    color: #ffca28;
-    font-weight: 600;
-    margin-top: 1px;
-}
-
-.header h3 {
-    color: #cbd5e1;
-    font-size: 9.5px;
-    font-weight: 400;
-    margin-top: 1px;
-}
-
-/* ===== MAIN WRAPPER ===== */
-.main-wrapper {
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-/* ===== STATS CARDS GRID (FIT EXACTLY IN 6 EQUAL COLUMNS) ===== */
-.cards-container {
+/* ===== 8 RESPONSIVE STATS CARDS ===== */
+.stats-grid {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 0;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    /* Auto-fitting grid on wider screens, collapsing smoothly on lower resolutions */
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.card {
-    padding: 2px 2px;
-    border-radius: 0;
-    color: white;
-    min-height: 36px;
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 46px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+    border-color: #cbd5e1;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--card-accent, var(--primary));
+}
+
+.stat-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--icon-bg, #f1f5f9);
+    color: var(--card-accent, var(--primary));
+}
+
+.stat-icon svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+}
+
+.stat-info {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: center;
-    position: relative;
-    border-right: 1px solid rgba(255, 255, 255, 0.15);
-    overflow: hidden;
+    min-width: 0;
 }
 
-.card:last-child {
-    border-right: none;
-}
-
-.range-filter-card {
-    background: linear-gradient(135deg, #0b192c 0%, #1e293b 100%);
-    border-left: 3px solid #ffca28;
-}
-
-.range-filter-card h3 {
-    color: #ffca28;
-    margin-bottom: 1px;
-}
-
-.range-inputs {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-}
-
-.range-inputs input {
-    width: 36px;
-    padding: 1px 2px;
-    border-radius: 2px;
-    border: 1px solid #ffca28;
-    background: #ffffff;
-    color: #000000;
-    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    text-align: center;
-    outline: none;
-}
-
-.range-inputs input:focus {
-    border-color: #00e676;
-}
-
-.range-inputs span {
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 9px;
-}
-
-.card:nth-child(3) { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
-.card:nth-child(4) { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
-.card:nth-child(5) { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
-.card:nth-child(6) { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); }
-
-.card h3 {
-    margin: 0;
-    font-size: 9px;
-    color: rgba(255, 255, 255, 0.9);
+.stat-info .stat-label {
+    font-size: 9.5px;
+    color: var(--text-muted);
     font-weight: 600;
     white-space: nowrap;
-    text-overflow: ellipsis;
     overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
 }
 
-.card p {
+.stat-info .stat-value {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.1;
     margin-top: 1px;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #ffffff;
-    line-height: 1;
+    white-space: nowrap;
 }
 
-/* ===== TIGHTLY WRAPPED FILTER TOOLBAR (SIZED TO TEXT CONTENT) ===== */
-.filter-container {
+/* Stat Cards Variant Accents */
+.stat-card.c-blue { --card-accent: #2563eb; --icon-bg: #eff6ff; }
+.stat-card.c-green { --card-accent: #059669; --icon-bg: #ecfdf5; }
+.stat-card.c-amber { --card-accent: #d97706; --icon-bg: #fffbeb; }
+.stat-card.c-purple { --card-accent: #7c3aed; --icon-bg: #f5f3ff; }
+.stat-card.c-indigo { --card-accent: #4f46e5; --icon-bg: #eef2ff; }
+.stat-card.c-rose { --card-accent: #e11d48; --icon-bg: #fff1f2; }
+.stat-card.c-teal { --card-accent: #0d9488; --icon-bg: #f0fdfa; }
+.stat-card.c-dark { --card-accent: #0f172a; --icon-bg: #f8fafc; }
+
+/* ===== SINGLE-ROW FIT FILTER TOOLBAR ===== */
+.filter-toolbar {
     width: 100%;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap; /* STRICT SINGLE ROW ON DESKTOP */
     align-items: center;
-    justify-content: space-between; /* EVENLY SPREADS TIGHT FILTERS */
-    gap: 3px;
+    gap: 8px; /* Standard 8px gap */
+    padding: 6px 12px;
     background: #0f172a;
-    padding: 3px 6px;
-    box-sizing: border-box;
-    overflow: hidden;
+    overflow: hidden; /* Prevents toolbar horizontal scroll */
 }
 
-/* SEARCH INPUT SHRUNK TO FIT TEXT */
-.filter-container input[type="text"] {
-    flex: 0 1 auto;
-    width: 85px; /* TIGHT COMPACT SEARCH FIELD */
+/* Range input inline grouping */
+.range-group {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: #1e293b;
     padding: 2px 4px;
-    border-radius: 2px;
-    border: 1px solid #475569;
-    background: #ffffff;
-    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
+    border-radius: var(--radius-sm);
+    border: 1px solid #334155;
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.range-group label {
+    color: var(--accent-gold);
     font-size: 9.5px;
     font-weight: 700;
+    white-space: nowrap;
+    padding-right: 2px;
+}
+
+.range-group input {
+    width: 38px;
+    height: 26px;
+    padding: 0 3px;
+    border-radius: 3px;
+    border: 1px solid #475569;
+    background: #ffffff;
     color: #000000;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
     outline: none;
 }
 
-/* DROPDOWN SELECTS SHRUNK EXACTLY TO TEXT SIZE WITH MINIMAL RIGHT SPACE */
-.filter-container select {
-    flex: 0 1 auto; /* PREVENTS DROPDOWNS FROM STRETCHING WIDE */
-    width: auto;    /* AUTO-FIT WIDTH TO SELECTED TEXT */
-    max-width: 110px;
-    padding: 2px 2px 2px 3px; /* MINIMAL RIGHT-SIDE PADDING */
-    border-radius: 2px;
-    border: 1px solid #475569;
-    background: #ffffff;
-    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    font-size: 9.5px;
+.range-group span {
+    color: #94a3b8;
+    font-size: 10px;
     font-weight: 700;
+}
+
+/* Standardized Form Controls (Inputs & Dropdowns) */
+.filter-control {
+    flex: 1 1 0px; /* Equal shrink/grow distribution to fit 100% width */
+    min-width: 0;  /* Allows flexbox items to compress down without overflowing */
+    height: var(--control-height);
+    padding: 0 6px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid #334155;
+    background: #ffffff;
     color: #000000;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 700;
     outline: none;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.filter-container select option {
-    font-weight: 700;
-    color: #000000;
+.filter-control:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 2px rgba(255, 202, 40, 0.25);
+}
+
+.filter-control option {
+    font-weight: 600;
+    color: #0f172a;
     background-color: #ffffff;
 }
 
-.filter-container input:focus,
-.filter-container select:focus {
-    border-color: #ff6600;
+/* Specific Search Box width tweaks */
+input[type="text"].filter-control {
+    flex: 1.2 1 0px;
 }
 
-/* ACTION BUTTONS SHRUNK TO FIT TEXT EXACTLY */
+/* Action Buttons */
 .action-btn {
-    flex: 0 0 auto; /* PREVENTS STRETCHING */
-    padding: 2px 6px;
+    height: var(--control-height);
+    padding: 0 10px;
     border: none;
-    border-radius: 2px;
-    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    font-size: 9.5px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-sans);
+    font-size: 10.5px;
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.2s ease, transform 0.1s ease;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.15s ease;
 }
 
-.action-btn:active {
-    transform: scale(0.97);
+.action-btn svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
 }
 
 .reset-btn {
@@ -276,15 +343,16 @@ html, body {
     background: #0e6b37;
 }
 
-/* ===== TABLE CONTAINER (INDEPENDENT DATA AREA) ===== */
+/* ==========================================================================
+   4. DATA TABLE SECTION (100% WIDTH & INDEPENDENT SCROLL)
+   ========================================================================== */
 .table-container {
-    flex-grow: 1;
+    flex: 1;
     width: 100%;
     overflow-x: auto !important;
     overflow-y: auto !important;
-    padding: 0;
-    margin: 0;
     background: #ffffff;
+    position: relative;
 }
 
 table {
@@ -292,52 +360,51 @@ table {
     width: 100%;
     table-layout: auto;
     background: #ffffff;
-    border: none;
-    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
+    font-family: var(--font-sans);
 }
 
+/* Sticky Header styling */
 th {
     background: #1e293b;
     color: #ffffff;
-    padding: 6px 8px;
+    padding: 8px 10px;
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;
-    overflow-wrap: normal;
-    word-break: normal;
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 700;
     position: sticky;
     top: 0;
-    z-index: 5;
+    z-index: 10;
     border-bottom: 2px solid #0f172a;
     border-right: 1px solid #334155;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 th:last-child {
     border-right: none;
 }
 
-/* DATA CELL BEHAVIOR */
+/* Table Data Cells */
 td {
-    padding: 4px 8px;
+    padding: 6px 10px;
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;
     border-bottom: 1px solid #e2e8f0;
     border-right: 1px solid #f1f5f9;
-    font-size: 10px;
-    background-color: #ffffff !important;
-    color: #000000;
+    font-size: 10.5px;
     font-weight: 500;
-    font-family: 'Tahoma', Geneva, Verdana, sans-serif;
-    line-height: 1.2;
+    color: #000000;
+    background-color: #ffffff !important;
+    line-height: 1.3;
 }
 
 td:last-child {
     border-right: none;
 }
 
+/* Alternating Rows and Hover */
 tr:nth-child(even) td {
     background-color: #ffffff !important;
 }
@@ -347,130 +414,273 @@ tr:hover td {
     color: #0369a1;
 }
 
-.loading {
+/* Loading & Empty Indicators */
+.status-msg {
     text-align: center;
-    padding: 20px;
-    font-size: 12px;
+    padding: 40px 20px;
+    font-size: 13px;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-muted);
 }
 
-/* CUSTOM ORANGE SCROLLBAR FOR TABLE DATA ONLY */
+/* Scrollbar Customization */
 .table-container::-webkit-scrollbar {
     height: 8px;
-    width: 6px;
+    width: 8px;
 }
 
 .table-container::-webkit-scrollbar-track {
-    background: #fff0e6;
+    background: #f1f5f9;
 }
 
 .table-container::-webkit-scrollbar-thumb {
-    background: #ff6600;
-    border-radius: 3px;
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ==========================================================================
+   5. RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+/* Laptop / Medium Screens (1024px to 1365px) */
+@media (max-width: 1365px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Tablet Screens (768px to 1023px) */
+@media (max-width: 1023px) {
+    body {
+        overflow-y: auto; /* Allow natural body scroll on smaller devices */
+    }
+
+    .top-controls {
+        position: relative;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .filter-toolbar {
+        flex-wrap: wrap; /* Wrap filters gracefully into multi-rows on tablet */
+        gap: 6px;
+    }
+
+    .filter-control {
+        flex: 1 1 calc(25% - 6px);
+        min-width: 120px;
+    }
+
+    .range-group {
+        flex: 1 1 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* Mobile Screens (< 768px) */
+@media (max-width: 767px) {
+    .header {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filter-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-control, .action-btn {
+        width: 100%;
+        flex: none;
+    }
+
+    .range-group {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<!-- HEADER BRAND BAR -->
+<div class="header">
+    <div class="header-brand">
+        <h1>Mahatma Gandhi Institute of Technology</h1>
+        <h2>Training & Placement Cell</h2>
+    </div>
+    <div class="header-badge">Academic Year 2026 - 2027</div>
+</div>
+
 <!-- FIXED TOP CONTROLS SECTION -->
 <div class="top-controls">
 
-    <!-- COMPACT HEADER -->
-    <div class="header">
-        <div class="header-brand">
-            <h1>Mahatma Gandhi Institute of Technology</h1>
-            <h2>Training & Placement Cell</h2>
-            <h3>Academic Year 2026 - 2027</h3>
+    <!-- 8 RESPONSIVE STATS CARDS -->
+    <div class="stats-grid">
+        <div class="stat-card c-blue">
+            <div class="stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Students</span>
+                <span class="stat-value" id="totalStudents">0</span>
+            </div>
+        </div>
+
+        <div class="stat-card c-green">
+            <div class="stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Registered</span>
+                <span class="stat-value" id="registeredStudents">0</span>
+            </div>
+        </div>
+
+        <div class="stat-card c-amber">
+            <div class="stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Eligible</span>
+                <span class="stat-value" id="eligibleStudents">0</span>
+            </div>
+        </div>
+
+        <div class="stat-card c-purple">
+            <div class="stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Placed</span>
+                <span class="stat-value" id="placedStudents">0</span>
+            </div>
+        </div>
+
+        <div class="stat-card c-indigo">
+            <div class="stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Offers</span>
+                <span class="stat-value" id="totalOffers">0</span>
+            </div>
+        </div>
+
+        <div class="stat-card c-teal">
+            <div class="stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Highest Package</span>
+                <span class="stat-value" id="highestPackage">N/A</span>
+            </div>
+        </div>
+
+        <div class="stat-card c-rose">
+            <div class="stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Avg Package</span>
+                <span class="stat-value" id="avgPackage">N/A</span>
+            </div>
+        </div>
+
+        <div class="stat-card c-dark">
+            <div class="stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Placement Rate</span>
+                <span class="stat-value" id="placementRate">0%</span>
+            </div>
         </div>
     </div>
 
-    <div class="main-wrapper">
-        <!-- STATS CARDS GRID (FIT EXACTLY IN 6 EQUAL COLUMNS) -->
-        <div class="cards-container">
-            <div class="card range-filter-card">
-                <h3>CGPA Range</h3>
-                <div class="range-inputs">
-                    <input type="number" id="minCgpa" placeholder="Min" step="0.1" min="0" max="10">
-                    <span>-</span>
-                    <input type="number" id="maxCgpa" placeholder="Max" step="0.1" min="0" max="10">
-                </div>
-            </div>
+    <!-- SINGLE-ROW FIT FILTER TOOLBAR -->
+    <div class="filter-toolbar">
+        <input type="text" id="searchInput" class="filter-control" placeholder="Search data...">
+        
+        <select id="branchFilter" class="filter-control"><option value="">Department</option></select>
+        <select id="entranceFilter" class="filter-control"><option value="">Entrance</option></select>
+        <select id="genderFilter" class="filter-control"><option value="">Gender</option></select>
+        <select id="dsaFilter" class="filter-control"><option value="">DSA Training</option></select>
+        <select id="registeredFilter" class="filter-control"><option value="">Registration Status</option></select>
+        <select id="offersFilter" class="filter-control"><option value="">Placement Status</option></select>
+        <select id="companyFilter" class="filter-control"><option value="">Company</option></select>
 
-            <div class="card range-filter-card">
-                <h3>Rank Range</h3>
-                <div class="range-inputs">
-                    <input type="number" id="minRank" placeholder="Min" min="1">
-                    <span>-</span>
-                    <input type="number" id="maxRank" placeholder="Max" min="1">
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Total Students</h3>
-                <p id="totalStudents">0</p>
-            </div>
-            <div class="card">
-                <h3>Eligible Students</h3>
-                <p id="eligibleStudents">0</p>
-            </div>
-            <div class="card">
-                <h3>Total Placed</h3>
-                <p id="placedStudents">0</p>
-            </div>
-            <div class="card">
-                <h3>Total Offers</h3>
-                <p id="totalOffers">0</p>
-            </div>
+        <!-- Inline CGPA Range Filter -->
+        <div class="range-group">
+            <label>CGPA:</label>
+            <input type="number" id="minCgpa" placeholder="Min" step="0.1" min="0" max="10">
+            <span>-</span>
+            <input type="number" id="maxCgpa" placeholder="Max" step="0.1" min="0" max="10">
         </div>
 
-        <!-- SINGLE-ROW FILTER TOOLBAR (TIGHTLY SHRUNK TO FIT TEXT) -->
-        <div class="filter-container">
-            <input type="text" id="searchInput" placeholder="Search...">
-            <select id="branchFilter"><option value="">Branch</option></select>
-            <select id="entranceFilter"><option value="">Entrance</option></select>
-            <select id="genderFilter"><option value="">Gender</option></select>
-            <select id="dsaFilter"><option value="">DSA Training</option></select>
-            <select id="registeredFilter"><option value="">Registered</option></select>
-            <select id="offersFilter"><option value="">Offers</option></select>
-            
-            <button class="action-btn reset-btn" onclick="resetAllFilters()" title="Reset all applied filters">Reset</button>
-            <button class="action-btn export-btn" onclick="exportToExcel()" title="Export filtered rows to Excel">Export Excel</button>
+        <!-- Inline Rank Range Filter -->
+        <div class="range-group">
+            <label>Rank:</label>
+            <input type="number" id="minRank" placeholder="Min" min="1">
+            <span>-</span>
+            <input type="number" id="maxRank" placeholder="Max" min="1">
         </div>
+
+        <button class="action-btn reset-btn" onclick="resetAllFilters()" title="Reset all applied filters">
+            <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+            Reset
+        </button>
+
+        <button class="action-btn export-btn" onclick="exportToExcel()" title="Export filtered data to Excel">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Excel
+        </button>
     </div>
 
 </div>
 
 <!-- DATA TABLE SECTION -->
 <div class="table-container">
-    <div class="loading" id="loading">Loading Student Placement Data...</div>
+    <div class="status-msg" id="loading">Loading Student Placement Data...</div>
     <table id="dataTable"></table>
 </div>
 
 <script>
-/* DIRECT GOOGLE SHEET CSV LINK INTEGRATION */
+/* GOOGLE SHEETS LIVE CSV LINK INTEGRATION */
 const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRs918b9wOBmLLA6UJDOtpHMHNuNnzxYCYUIoYd5sIXg-sEkiYZtuNKYo8vEN4d7qWTpDoOvMWq7Cxc/pub?gid=981950419&single=true&output=csv";
 
 let originalData = [];
 let headers = [];
 
-/* FILTER DEFINITIONS */
+/* CONFIGURATION OF DYNAMIC DROPDOWNS & MAPPINGS */
 const filterConfigs = [
     { id: 'branchFilter', header: 'Branch', key: 'branch' },
     { id: 'entranceFilter', header: 'Entrance', key: 'entrance' },
     { id: 'genderFilter', header: 'Gender', key: 'gender' },
     { id: 'dsaFilter', header: 'DSA', key: 'dsa' },
     { id: 'registeredFilter', header: 'Registered for Placements', key: 'registered' },
-    { id: 'offersFilter', header: 'No. of Offers', key: 'offers' }
+    { id: 'offersFilter', header: 'No. of Offers', key: 'offers' },
+    { id: 'companyFilter', header: 'Company', key: 'company' }
 ];
 
+/* CSV PARSING INITIATION */
 Papa.parse(csvURL, {
     download: true,
     skipEmptyLines: true,
     complete: function(results) {
         if (!results.data || results.data.length === 0) {
-            document.getElementById("loading").innerText = "Error: No data found in CSV.";
+            document.getElementById("loading").innerText = "Error: No placement data found.";
             return;
         }
 
@@ -482,19 +692,19 @@ Papa.parse(csvURL, {
         document.getElementById("loading").style.display = "none";
     },
     error: function(err) {
-        document.getElementById("loading").innerText = "Error loading CSV file.";
+        document.getElementById("loading").innerText = "Failed to load CSV source data.";
         console.error(err);
     }
 });
 
-/* FILTER ELEMENTS */
+/* DOM ELEMENTS */
 const searchInput = document.getElementById("searchInput");
 const minCgpaInput = document.getElementById("minCgpa");
 const maxCgpaInput = document.getElementById("maxCgpa");
 const minRankInput = document.getElementById("minRank");
 const maxRankInput = document.getElementById("maxRank");
 
-/* EVENT LISTENERS */
+/* LISTENERS */
 searchInput.addEventListener("input", applyFilters);
 minCgpaInput.addEventListener("input", applyFilters);
 maxCgpaInput.addEventListener("input", applyFilters);
@@ -506,7 +716,7 @@ filterConfigs.forEach(cfg => {
     if (el) el.addEventListener("change", applyFilters);
 });
 
-/* ROBUST HEADER INDEX FINDER */
+/* ROBUST ALIAS-BASED HEADER INDEX FINDER */
 function getHeaderIndex(target) {
     if (!headers || headers.length === 0) return -1;
     
@@ -520,6 +730,8 @@ function getHeaderIndex(target) {
         "DSA": ["dsa", "dsa training"],
         "Registered for Placements": ["registered for placement", "registered for placements", "registered", "placement registration"],
         "No. of Offers": ["no. of offers", "no of offers", "number of offers", "offers", "total offers"],
+        "Company": ["company", "company name", "recruiter", "placed company"],
+        "Salary": ["salary", "package", "ctc", "lpa"],
         "CGPA": ["cgpa", "gpa", "marks"],
         "Rank": ["rank", "eamcet rank", "ecet rank", "entrance rank"]
     };
@@ -535,7 +747,7 @@ function getHeaderIndex(target) {
     return -1;
 }
 
-/* GET ACTIVE ROWS FILTERED BY ALL FILTERS EXCEPT EXCLUDEKEY */
+/* CROSS-FILTERING ROW LOGIC */
 function getFilteredRowsExcluding(excludeKey = null) {
     const search = searchInput.value.toLowerCase();
     
@@ -555,10 +767,10 @@ function getFilteredRowsExcluding(excludeKey = null) {
     const rankIdx = getHeaderIndex("Rank");
 
     return originalData.filter(row => {
-        // Global search filter
+        // Search Filter
         if (search && !row.join(" ").toLowerCase().includes(search)) return false;
 
-        // CGPA Range filter
+        // CGPA Filter
         if (cgpaIdx !== -1) {
             let rowCgpa = parseFloat(row[cgpaIdx]);
             if (!isNaN(rowCgpa)) {
@@ -569,7 +781,7 @@ function getFilteredRowsExcluding(excludeKey = null) {
             }
         }
 
-        // Rank Range filter
+        // Rank Filter
         if (rankIdx !== -1) {
             let rawRankStr = String(row[rankIdx] || "").replace(/[^0-9.]/g, '');
             let rowRank = parseFloat(rawRankStr);
@@ -581,7 +793,7 @@ function getFilteredRowsExcluding(excludeKey = null) {
             }
         }
 
-        // Apply dropdown filters EXCEPT excludeKey
+        // Dropdown Filters
         for (let cfg of filterConfigs) {
             if (cfg.key === excludeKey) continue;
             const val = selectedValues[cfg.key];
@@ -598,7 +810,7 @@ function getFilteredRowsExcluding(excludeKey = null) {
     });
 }
 
-/* DYNAMICALLY UPDATE DROPDOWN OPTIONS */
+/* DYNAMIC CASCADING DROPDOWN UPDATER */
 function updateDynamicFilterDropdowns() {
     filterConfigs.forEach(cfg => {
         const selectEl = document.getElementById(cfg.id);
@@ -638,7 +850,7 @@ function updateDynamicFilterDropdowns() {
     });
 }
 
-/* MAIN APPLY FILTERS LOGIC */
+/* APPLY FILTERS & RE-RENDER */
 function applyFilters(){
     updateDynamicFilterDropdowns();
     const filtered = getFilteredRowsExcluding(null);
@@ -646,7 +858,7 @@ function applyFilters(){
     updateStatistics(filtered);
 }
 
-/* RESET ALL FILTERS LOGIC */
+/* RESET ALL FILTERS */
 function resetAllFilters(){
     searchInput.value = "";
     minCgpaInput.value = "";
@@ -662,7 +874,7 @@ function resetAllFilters(){
     applyFilters();
 }
 
-/* EXPORT TO EXCEL LOGIC (UTF-8 BOM EMBEDDED) */
+/* EXPORT TO EXCEL LOGIC (WITH UTF-8 BOM PRESERVATION) */
 function exportToExcel(){
     const filtered = getFilteredRowsExcluding(null);
     if (!filtered || filtered.length === 0) {
@@ -671,7 +883,6 @@ function exportToExcel(){
     }
 
     let csvLines = [];
-
     let headerRow = headers.map(h => `"${String(h).replace(/"/g, '""')}"`).join(",");
     csvLines.push(headerRow);
 
@@ -701,6 +912,14 @@ function exportToExcel(){
 
 /* DYNAMIC TABLE GENERATION */
 function createTable(headers, rows){
+    if (rows.length === 0) {
+        document.getElementById("dataTable").innerHTML = `
+            <thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+            <tbody><tr><td colspan="${headers.length}" style="padding:30px; color:#64748b; font-weight:600;">No records found matching applied criteria.</td></tr></tbody>
+        `;
+        return;
+    }
+
     let tableHTML = "<thead><tr>";
     headers.forEach(header => {
         tableHTML += `<th>${header}</th>`;
@@ -719,35 +938,73 @@ function createTable(headers, rows){
     document.getElementById("dataTable").innerHTML = tableHTML;
 }
 
-/* CALCULATE STATISTICS */
+/* STATISTICAL METRICS CALCULATION */
 function updateStatistics(data){
     const cgpaIdx = getHeaderIndex("CGPA");
     const offersIdx = getHeaderIndex("No. of Offers");
+    const registeredIdx = getHeaderIndex("Registered for Placements");
+    const salaryIdx = getHeaderIndex("Salary");
 
+    // Total Students
     const totalStudents = data.length;
 
+    // Registered Students Count
+    const registeredCount = data.filter(row => {
+        if (registeredIdx === -1) return true;
+        const val = String(row[registeredIdx] || "").trim().toLowerCase();
+        return val === "yes" || val === "registered" || val === "1";
+    }).length;
+
+    // Eligible Students
     const eligibleStudents = data.filter(row => {
         if (cgpaIdx === -1) return false;
         const val = parseFloat(row[cgpaIdx]);
         return !isNaN(val) && isFinite(val);
     }).length;
 
+    // Placed Students
     const placedStudents = data.filter(row => {
         if (offersIdx === -1) return false;
         const val = parseFloat(row[offersIdx]);
         return !isNaN(val) && isFinite(val) && val > 0;
     }).length;
 
+    // Total Offers Sum
     const totalOffers = data.reduce((sum, row) => {
         if (offersIdx === -1) return sum;
         const val = parseFloat(row[offersIdx]);
         return sum + (!isNaN(val) && isFinite(val) ? val : 0);
     }, 0);
 
+    // Salary Computations
+    let maxSalary = 0;
+    let totalSalary = 0;
+    let salaryCount = 0;
+
+    if (salaryIdx !== -1) {
+        data.forEach(row => {
+            let rawSal = String(row[salaryIdx] || "").replace(/[^0-9.]/g, '');
+            let salVal = parseFloat(rawSal);
+            if (!isNaN(salVal) && salVal > 0) {
+                if (salVal > maxSalary) maxSalary = salVal;
+                totalSalary += salVal;
+                salaryCount++;
+            }
+        });
+    }
+
+    // Placement Rate Calculation
+    const rate = totalStudents > 0 ? ((placedStudents / totalStudents) * 100).toFixed(1) + "%" : "0%";
+
+    // DOM Updates
     document.getElementById("totalStudents").innerText = totalStudents;
+    document.getElementById("registeredStudents").innerText = registeredCount;
     document.getElementById("eligibleStudents").innerText = eligibleStudents;
     document.getElementById("placedStudents").innerText = placedStudents;
     document.getElementById("totalOffers").innerText = totalOffers;
+    document.getElementById("highestPackage").innerText = maxSalary > 0 ? maxSalary + " LPA" : "N/A";
+    document.getElementById("avgPackage").innerText = salaryCount > 0 ? (totalSalary / salaryCount).toFixed(2) + " LPA" : "N/A";
+    document.getElementById("placementRate").innerText = rate;
 }
 </script>
 
