@@ -90,11 +90,11 @@ html, body {
     gap: 0;
 }
 
-/* ===== METRIC CARDS & CGPA RANGE BOX ===== */
+/* ===== METRIC CARDS & CGPA RANGE BOX (UPDATED GRID: 5 CARDS TOTAL) ===== */
 .cards-container {
     width: 100%;
     display: grid;
-    grid-template-columns: 1.1fr repeat(5, 1fr);
+    grid-template-columns: 1.1fr repeat(4, 1fr);
     gap: 0;
     margin: 0;
     padding: 0;
@@ -141,7 +141,7 @@ html, body {
     border-radius: 3px;
     border: 1px solid #ffca28;
     background: #ffffff;
-    color: #000000; /* THICKER BLACK COLOR FOR CGPA INPUTS */
+    color: #000000;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     font-size: 11px;
     font-weight: 700;
@@ -164,7 +164,6 @@ html, body {
 .card:nth-child(3) { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
 .card:nth-child(4) { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
 .card:nth-child(5) { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); }
-.card:nth-child(6) { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
 
 .card h3 {
     margin: 0;
@@ -181,7 +180,7 @@ html, body {
     color: #ffffff;
 }
 
-/* ===== SINGLE ROW FILTER TOOLBAR ===== */
+/* ===== SINGLE ROW FILTER TOOLBAR (UPDATED DROPDOWN THICKNESS) ===== */
 .filter-container {
     width: 100%;
     display: flex;
@@ -201,28 +200,34 @@ html, body {
     min-width: 100px;
     padding: 5px 6px;
     border-radius: 3px;
-    border: 1px solid #334155;
+    border: 1.5px solid #475569;
     background: #ffffff;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     font-size: 11px;
-    font-weight: 700; /* THICKER BLACK FONT FOR FILTERS */
-    color: #000000;   /* SOLID BLACK */
+    font-weight: 700;
+    color: #000000;
     outline: none;
 }
 
 .filter-container select {
     flex: 1;
     min-width: 80px;
-    padding: 5px 3px;
+    padding: 5px 4px;
     border-radius: 3px;
-    border: 1px solid #334155;
+    border: 1.5px solid #475569; /* ADDED EXTRA THICKNESS TO DROPDOWN BORDER */
     background: #ffffff;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     font-size: 11px;
-    font-weight: 700; /* THICKER BLACK FONT FOR FILTERS */
-    color: #000000;   /* SOLID BLACK */
+    font-weight: 800; /* ADDED THICKNESS TO DROPDOWN TEXT */
+    color: #000000;   /* SOLID THICK BLACK */
     outline: none;
     text-overflow: ellipsis;
+}
+
+.filter-container select option {
+    font-weight: 700;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 .filter-container input:focus,
@@ -265,7 +270,7 @@ html, body {
     background: #0e6b37;
 }
 
-/* ===== TABLE CONTAINER & GOOGLE SHEETS MATCHING HEADERS ===== */
+/* ===== TABLE CONTAINER & HEADERS ===== */
 .table-container {
     flex-grow: 1;
     width: 100%;
@@ -285,36 +290,25 @@ table {
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
 }
 
-/* HEADER BEHAVIOR */
 th {
     background: #1e293b;
     color: #ffffff;
     padding: 8px 10px;
-    
-    /* Centering Rules */
     text-align: center;
     vertical-align: middle;
-    
-    /* Single Row without Wrapping */
     white-space: nowrap;
     overflow-wrap: normal;
     word-break: normal;
     text-overflow: clip;
     overflow: visible;
-    
-    /* Dynamic Sizing Rules */
     height: auto;
     line-height: 1.35;
     font-size: 11px;
     font-weight: 700;
     text-transform: none;
-    
-    /* Sticky Header Rules */
     position: sticky;
     top: 0;
     z-index: 5;
-    
-    /* Grid Lines */
     border-bottom: 2px solid #0f172a;
     border-right: 1px solid #334155;
 }
@@ -323,26 +317,20 @@ th:last-child {
     border-right: none;
 }
 
-/* DATA CELL BEHAVIOR */
+/* DATA CELL BEHAVIOR (DECREASED BOLDNESS TO FONT-WEIGHT: 500) */
 td {
     padding: 6px 10px;
     text-align: center;
     vertical-align: middle;
-    
-    /* Single row without wrapping */
     white-space: nowrap;
     overflow-wrap: normal;
     word-break: normal;
-    
     border-bottom: 1px solid #e2e8f0;
     border-right: 1px solid #f1f5f9;
     font-size: 11px;
-    
-    /* SOLID WHITE BACKGROUND & THICK BLACK FONT */
     background-color: #ffffff !important;
     color: #000000;
-    font-weight: 600;
-    
+    font-weight: 500; /* MODERATED BOLDNESS */
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
     line-height: 1.3;
     transition: background-color 0.15s ease, color 0.15s ease;
@@ -352,7 +340,6 @@ td:last-child {
     border-right: none;
 }
 
-/* Ensuring solid white background across all alternating rows */
 tr:nth-child(even) td {
     background-color: #ffffff !important;
 }
@@ -371,7 +358,7 @@ tr:hover td {
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
 }
 
-/* SOLID ORANGE HORIZONTAL SCROLLBAR */
+/* SCROLLBAR STYLING */
 .table-container::-webkit-scrollbar {
     height: 10px;
     width: 8px;
@@ -408,7 +395,7 @@ tr:hover td {
     </div>
 
     <div class="main-wrapper">
-        <!-- METRIC CARDS SECTION WITH CGPA RANGE FILTER BOX -->
+        <!-- METRIC CARDS SECTION (REGISTERED CARD REMOVED) -->
         <div class="cards-container">
             <div class="card cgpa-filter-card">
                 <h3>CGPA Range Filter</h3>
@@ -422,10 +409,6 @@ tr:hover td {
             <div class="card">
                 <h3>Total Students</h3>
                 <p id="totalStudents">0</p>
-            </div>
-            <div class="card">
-                <h3>Registered for Placements</h3>
-                <p id="registeredStudents">0</p>
             </div>
             <div class="card">
                 <h3>Eligible Students</h3>
@@ -445,13 +428,12 @@ tr:hover td {
         <div class="filter-container">
             <input type="text" id="searchInput" placeholder="Search data...">
             <select id="branchFilter"><option value="">Branch</option></select>
-            <select id="entranceFilter"><option value="">Entrance</option></select> <!-- REPLACED BACKLOG WITH ENTRANCE -->
+            <select id="entranceFilter"><option value="">Entrance</option></select>
             <select id="genderFilter"><option value="">Gender</option></select>
             <select id="dsaFilter"><option value="">DSA Training</option></select>
             <select id="registeredFilter"><option value="">Registered for Placements</option></select>
             <select id="offersFilter"><option value="">No. of Offers</option></select>
             
-            <!-- RESET FILTERS & EXCEL EXPORT BUTTONS -->
             <button class="action-btn reset-btn" onclick="resetAllFilters()" title="Reset all applied filters">Reset Filters</button>
             <button class="action-btn export-btn" onclick="exportToExcel()" title="Export filtered rows to Excel">Export Excel</button>
         </div>
@@ -472,6 +454,16 @@ const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRs918b9wOBmLLA6
 let originalData = [];
 let headers = [];
 
+/* FILTER DEFINITIONS */
+const filterConfigs = [
+    { id: 'branchFilter', header: 'Branch', key: 'branch' },
+    { id: 'entranceFilter', header: 'Entrance', key: 'entrance' },
+    { id: 'genderFilter', header: 'Gender', key: 'gender' },
+    { id: 'dsaFilter', header: 'DSA', key: 'dsa' },
+    { id: 'registeredFilter', header: 'Registered for Placements', key: 'registered' },
+    { id: 'offersFilter', header: 'No. of Offers', key: 'offers' }
+];
+
 Papa.parse(csvURL, {
     download: true,
     skipEmptyLines: true,
@@ -484,7 +476,6 @@ Papa.parse(csvURL, {
         headers = results.data[0];
         originalData = results.data.slice(1);
 
-        populateFilters(originalData);
         applyFilters();
 
         document.getElementById("loading").style.display = "none";
@@ -497,115 +488,149 @@ Papa.parse(csvURL, {
 
 /* FILTER ELEMENTS */
 const searchInput = document.getElementById("searchInput");
-const branchFilter = document.getElementById("branchFilter");
-const entranceFilter = document.getElementById("entranceFilter"); /* CHANGED FROM BACKLOG TO ENTRANCE */
-const genderFilter = document.getElementById("genderFilter");
-const dsaFilter = document.getElementById("dsaFilter");
-const registeredFilter = document.getElementById("registeredFilter");
-const offersFilter = document.getElementById("offersFilter");
 const minCgpaInput = document.getElementById("minCgpa");
 const maxCgpaInput = document.getElementById("maxCgpa");
 
 /* EVENT LISTENERS */
 searchInput.addEventListener("input", applyFilters);
-branchFilter.addEventListener("change", applyFilters);
-entranceFilter.addEventListener("change", applyFilters); /* CHANGED FROM BACKLOG TO ENTRANCE */
-genderFilter.addEventListener("change", applyFilters);
-dsaFilter.addEventListener("change", applyFilters);
-registeredFilter.addEventListener("change", applyFilters);
-offersFilter.addEventListener("change", applyFilters);
 minCgpaInput.addEventListener("input", applyFilters);
 maxCgpaInput.addEventListener("input", applyFilters);
 
-/* DYNAMICALLY POPULATE DROPDOWNS BASED ON GOOGLE SHEET HEADERS */
-function populateFilters(data){
-    fillFilter(branchFilter, "Branch", data);
-    fillFilter(entranceFilter, "Entrance", data); /* CHANGED FROM BACKLOG TO ENTRANCE */
-    fillFilter(genderFilter, "Gender", data);
-    fillFilter(dsaFilter, "DSA", data);
-    fillFilter(registeredFilter, "Registered for Placements", data);
-    fillFilter(offersFilter, "No. of Offers", data);
-}
+filterConfigs.forEach(cfg => {
+    const el = document.getElementById(cfg.id);
+    if (el) el.addEventListener("change", applyFilters);
+});
 
-function fillFilter(filter, column, data){
-    let index = headers.indexOf(column);
-    if (index === -1) {
-        index = headers.findIndex(h => h.toUpperCase().includes(column.toUpperCase()));
-    }
+/* ROBUST HEADER INDEX FINDER WITH ALIASES */
+function getHeaderIndex(target) {
+    if (!headers || headers.length === 0) return -1;
     
-    if(index === -1) {
-        filter.innerHTML = `<option value="">${column} (N/A)</option>`;
-        return; 
-    }
+    // 1. Exact match (case insensitive)
+    let idx = headers.findIndex(h => String(h).trim().toLowerCase() === target.trim().toLowerCase());
+    if (idx !== -1) return idx;
 
-    const dynamicHeaderName = headers[index];
-
-    let values = [...new Set(data.map(row => row[index]))];
-    values = values.filter(v => v !== undefined && v !== null && String(v).trim() !== "");
-
-    filter.innerHTML = `<option value="">${dynamicHeaderName}</option>`;
-
-    values.sort().forEach(value => {
-        filter.innerHTML += `<option value="${value}">${value}</option>`;
-    });
-}
-
-/* FILTER LOGIC */
-function applyFilters(){
-    const search = searchInput.value.toLowerCase();
-    const filters = {
-        branch: branchFilter.value,
-        entrance: entranceFilter.value, /* CHANGED FROM BACKLOG TO ENTRANCE */
-        gender: genderFilter.value,
-        dsa: dsaFilter.value,
-        registered: registeredFilter.value,
-        offers: offersFilter.value
+    // 2. Fallback Alias Map
+    const aliases = {
+        "Branch": ["branch", "dept", "department"],
+        "Entrance": ["entrance", "entry", "exam"],
+        "Gender": ["gender", "sex"],
+        "DSA": ["dsa", "dsa training"],
+        "Registered for Placements": ["registered for placement", "registered for placements", "registered", "placement registration"],
+        "No. of Offers": ["no. of offers", "no of offers", "number of offers", "offers", "total offers"],
+        "CGPA": ["cgpa", "gpa", "marks"]
     };
 
+    const targetKey = Object.keys(aliases).find(k => k.toLowerCase() === target.toLowerCase()) || target;
+    const targetAliases = aliases[targetKey] || [target.toLowerCase()];
+
+    for (let alias of targetAliases) {
+        idx = headers.findIndex(h => String(h).toLowerCase().includes(alias));
+        if (idx !== -1) return idx;
+    }
+
+    return -1;
+}
+
+/* GET ACTIVE ROWS FILTERED BY ALL FILTERS EXCEPT ONE SPECIFIC DROPDOWN (FOR DYNAMIC CASCADING) */
+function getFilteredRowsExcluding(excludeKey = null) {
+    const search = searchInput.value.toLowerCase();
     const minCgpaVal = minCgpaInput.value !== "" ? parseFloat(minCgpaInput.value) : null;
     const maxCgpaVal = maxCgpaInput.value !== "" ? parseFloat(maxCgpaInput.value) : null;
 
-    const getIdx = (text) => {
-        let idx = headers.indexOf(text);
-        if (idx === -1) idx = headers.findIndex(h => h.toUpperCase().includes(text.toUpperCase()));
-        return idx;
-    };
-
-    const indexes = {
-        branch: getIdx("Branch"),
-        entrance: getIdx("Entrance"), /* CHANGED FROM BACKLOG TO ENTRANCE */
-        gender: getIdx("Gender"),
-        dsa: getIdx("DSA"),
-        registered: getIdx("Registered for Placements"),
-        offers: getIdx("No. of Offers"),
-        cgpa: headers.indexOf("CGPA") !== -1 ? headers.indexOf("CGPA") : getIdx("CGPA")
-    };
-
-    let filtered = originalData.filter(row => {
-        const rowText = row.join(" ").toLowerCase();
-
-        let rowCgpa = indexes.cgpa !== -1 ? parseFloat(row[indexes.cgpa]) : NaN;
-        let passesCgpa = true;
-
-        if (!isNaN(rowCgpa)) {
-            if (minCgpaVal !== null && rowCgpa < minCgpaVal) passesCgpa = false;
-            if (maxCgpaVal !== null && rowCgpa > maxCgpaVal) passesCgpa = false;
-        } else if (minCgpaVal !== null || maxCgpaVal !== null) {
-            passesCgpa = false;
-        }
-
-        return (
-            rowText.includes(search) &&
-            passesCgpa &&
-            (indexes.branch === -1 || !filters.branch || row[indexes.branch] === filters.branch) &&
-            (indexes.entrance === -1 || !filters.entrance || row[indexes.entrance] === filters.entrance) &&
-            (indexes.gender === -1 || !filters.gender || row[indexes.gender] === filters.gender) &&
-            (indexes.dsa === -1 || !filters.dsa || row[indexes.dsa] === filters.dsa) &&
-            (indexes.registered === -1 || !filters.registered || String(row[indexes.registered]).toLowerCase().trim() === filters.registered.toLowerCase().trim()) &&
-            (indexes.offers === -1 || !filters.offers || row[indexes.offers] === filters.offers)
-        );
+    const selectedValues = {};
+    filterConfigs.forEach(cfg => {
+        const el = document.getElementById(cfg.id);
+        selectedValues[cfg.key] = el ? el.value : "";
     });
 
+    const cgpaIdx = getHeaderIndex("CGPA");
+
+    return originalData.filter(row => {
+        // Global search filter
+        if (search && !row.join(" ").toLowerCase().includes(search)) return false;
+
+        // CGPA Range filter
+        if (cgpaIdx !== -1) {
+            let rowCgpa = parseFloat(row[cgpaIdx]);
+            if (!isNaN(rowCgpa)) {
+                if (minCgpaVal !== null && rowCgpa < minCgpaVal) return false;
+                if (maxCgpaVal !== null && rowCgpa > maxCgpaVal) return false;
+            } else if (minCgpaVal !== null || maxCgpaVal !== null) {
+                return false;
+            }
+        }
+
+        // Apply all dropdown filters EXCEPT excludeKey
+        for (let cfg of filterConfigs) {
+            if (cfg.key === excludeKey) continue;
+            const val = selectedValues[cfg.key];
+            if (val) {
+                const colIdx = getHeaderIndex(cfg.header);
+                if (colIdx !== -1) {
+                    const rowVal = String(row[colIdx] || "").trim();
+                    if (rowVal.toLowerCase() !== val.toLowerCase()) return false;
+                }
+            }
+        }
+
+        return true;
+    });
+}
+
+/* DYNAMICALLY UPDATE ALL DROPDOWN OPTIONS BASED ON CURRENTLY APPLIED FILTERS */
+function updateDynamicFilterDropdowns() {
+    filterConfigs.forEach(cfg => {
+        const selectEl = document.getElementById(cfg.id);
+        if (!selectEl) return;
+
+        const currentValue = selectEl.value;
+        const colIdx = getHeaderIndex(cfg.header);
+
+        if (colIdx === -1) {
+            selectEl.innerHTML = `<option value="">${cfg.header} (N/A)</option>`;
+            return;
+        }
+
+        // Compute valid rows matching all OTHER filters
+        const matchingRows = getFilteredRowsExcluding(cfg.key);
+
+        // Extract available options from matching rows
+        let uniqueVals = [...new Set(matchingRows.map(r => String(r[colIdx] || "").trim()))]
+            .filter(v => v !== undefined && v !== null && v !== "");
+
+        // Preserve current user selection if still present
+        if (currentValue && !uniqueVals.some(v => v.toLowerCase() === currentValue.toLowerCase())) {
+            uniqueVals.push(currentValue);
+        }
+
+        // Sort unique options
+        uniqueVals.sort((a, b) => {
+            const numA = Number(a), numB = Number(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.localeCompare(b);
+        });
+
+        // Re-render HTML options
+        const actualHeaderName = headers[colIdx] || cfg.header;
+        let optionsHTML = `<option value="">${actualHeaderName}</option>`;
+        uniqueVals.forEach(val => {
+            const isSelected = (val.toLowerCase() === currentValue.toLowerCase()) ? "selected" : "";
+            optionsHTML += `<option value="${val}" ${isSelected}>${val}</option>`;
+        });
+
+        selectEl.innerHTML = optionsHTML;
+    });
+}
+
+/* MAIN APPLY FILTERS LOGIC */
+function applyFilters(){
+    // 1. Update dropdown choices based on cross-filtering
+    updateDynamicFilterDropdowns();
+
+    // 2. Get dataset matching ALL filters
+    const filtered = getFilteredRowsExcluding(null);
+
+    // 3. Render Table & Metrics
     createTable(headers, filtered);
     updateStatistics(filtered);
 }
@@ -613,14 +638,14 @@ function applyFilters(){
 /* RESET ALL FILTERS LOGIC */
 function resetAllFilters(){
     searchInput.value = "";
-    branchFilter.value = "";
-    entranceFilter.value = ""; /* CHANGED FROM BACKLOG TO ENTRANCE */
-    genderFilter.value = "";
-    dsaFilter.value = "";
-    registeredFilter.value = "";
-    offersFilter.value = "";
     minCgpaInput.value = "";
     maxCgpaInput.value = "";
+    
+    filterConfigs.forEach(cfg => {
+        const el = document.getElementById(cfg.id);
+        if (el) el.value = "";
+    });
+
     applyFilters();
 }
 
@@ -654,7 +679,7 @@ function exportToExcel(){
     URL.revokeObjectURL(url);
 }
 
-/* DYNAMIC TABLE GENERATION MATCHING GOOGLE SHEETS HEADERS EXACTLY */
+/* DYNAMIC TABLE GENERATION */
 function createTable(headers, rows){
     let tableHTML = "<thead><tr>";
     headers.forEach(header => {
@@ -665,7 +690,7 @@ function createTable(headers, rows){
     rows.forEach(row => {
         tableHTML += "<tr>";
         row.forEach(cell => {
-            tableHTML += `<td>${cell}</td>`;
+            tableHTML += `<td>${cell !== undefined && cell !== null ? cell : ""}</td>`;
         });
         tableHTML += "</tr>";
     });
@@ -674,50 +699,39 @@ function createTable(headers, rows){
     document.getElementById("dataTable").innerHTML = tableHTML;
 }
 
-/* CALCULATE STATISTICS */
+/* CALCULATE STATISTICS BASED ON NEW STRICT NUMERICAL RULES */
 function updateStatistics(data){
-    const getIdx = (text) => {
-        let idx = headers.indexOf(text);
-        if (idx === -1) idx = headers.findIndex(h => h.toUpperCase().includes(text.toUpperCase()));
-        return idx;
-    };
+    const cgpaIdx = getHeaderIndex("CGPA");
+    const offersIdx = getHeaderIndex("No. of Offers");
 
-    const indexes = {
-        cgpa: headers.indexOf("CGPA") !== -1 ? headers.indexOf("CGPA") : getIdx("CGPA"),
-        registered: getIdx("Registered for Placements"),
-        offers: getIdx("No. of Offers")
-    };
-
+    // 1. Total Students
     const totalStudents = data.length;
 
-    const placedStudents = data.filter(row => {
-        if (indexes.offers === -1) return false;
-        const offers = row[indexes.offers];
-        return offers !== "" && offers != null && Number(offers) > 0;
+    // 2. Eligible Students = Counts only Numerical Values rows from CGPA Column
+    const eligibleStudents = data.filter(row => {
+        if (cgpaIdx === -1) return false;
+        const val = parseFloat(row[cgpaIdx]);
+        return !isNaN(val) && isFinite(val);
     }).length;
 
+    // 3. Total Students Placed = Count of Numeric rows from No. of Offers Column
+    const placedStudents = data.filter(row => {
+        if (offersIdx === -1) return false;
+        const val = parseFloat(row[offersIdx]);
+        return !isNaN(val) && isFinite(val) && val > 0;
+    }).length;
+
+    // 4. Total Offers = Sum of all Numeric Values from No. of Offers Column
     const totalOffers = data.reduce((sum, row) => {
-        if (indexes.offers === -1) return sum;
-        return sum + (Number(row[indexes.offers]) || 0);
+        if (offersIdx === -1) return sum;
+        const val = parseFloat(row[offersIdx]);
+        return sum + (!isNaN(val) && isFinite(val) ? val : 0);
     }, 0);
 
-    const registeredStudents = data.filter(row => {
-        if (indexes.registered === -1) return false;
-        return String(row[indexes.registered]).toLowerCase().trim() === "yes";
-    }).length;
-
-    const eligibleStudents = data.filter(row => {
-        if (indexes.cgpa === -1 || indexes.registered === -1) return false;
-        const cgpa = parseFloat(row[indexes.cgpa]) || 0;
-        const registered = String(row[indexes.registered]).toLowerCase().trim();
-        return cgpa >= 6.5 && registered === "yes";
-    }).length;
-
     document.getElementById("totalStudents").innerText = totalStudents;
+    document.getElementById("eligibleStudents").innerText = eligibleStudents;
     document.getElementById("placedStudents").innerText = placedStudents;
     document.getElementById("totalOffers").innerText = totalOffers;
-    document.getElementById("registeredStudents").innerText = registeredStudents;
-    document.getElementById("eligibleStudents").innerText = eligibleStudents;
 }
 </script>
 
