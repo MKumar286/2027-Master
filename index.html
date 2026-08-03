@@ -90,11 +90,11 @@ html, body {
     width: 100%;
 }
 
-/* ===== ULTRA-COMPACT STATS CARDS (GRID OF 6 EQUAL FIT COLUMNS) ===== */
+/* ===== STATS CARDS GRID (FIT EXACTLY IN 6 EQUAL COLUMNS) ===== */
 .cards-container {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(6, 1fr); /* 6 EQUAL COLUMNS THAT NEVER OVERFLOW */
+    grid-template-columns: repeat(6, 1fr);
     gap: 0;
     margin: 0;
     padding: 0;
@@ -183,25 +183,25 @@ html, body {
     line-height: 1;
 }
 
-/* ===== ULTRA-COMPACT TOOLBAR (FITS ALL 9 FILTERS/BUTTONS IN 100% WIDTH) ===== */
+/* ===== TIGHTLY WRAPPED FILTER TOOLBAR (SIZED TO TEXT CONTENT) ===== */
 .filter-container {
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 2px;
+    justify-content: space-between; /* EVENLY SPREADS TIGHT FILTERS */
+    gap: 3px;
     background: #0f172a;
-    padding: 3px 3px;
+    padding: 3px 6px;
     box-sizing: border-box;
-    overflow: hidden; /* GUARANTEES NO HORIZONTAL SCROLLING */
+    overflow: hidden;
 }
 
+/* SEARCH INPUT SHRUNK TO FIT TEXT */
 .filter-container input[type="text"] {
-    flex: 0.8;
-    min-width: 0;
-    max-width: 95px;
-    padding: 2px 3px;
+    flex: 0 1 auto;
+    width: 85px; /* TIGHT COMPACT SEARCH FIELD */
+    padding: 2px 4px;
     border-radius: 2px;
     border: 1px solid #475569;
     background: #ffffff;
@@ -212,10 +212,12 @@ html, body {
     outline: none;
 }
 
+/* DROPDOWN SELECTS SHRUNK EXACTLY TO TEXT SIZE WITH MINIMAL RIGHT SPACE */
 .filter-container select {
-    flex: 1;
-    min-width: 0;
-    padding: 2px 1px;
+    flex: 0 1 auto; /* PREVENTS DROPDOWNS FROM STRETCHING WIDE */
+    width: auto;    /* AUTO-FIT WIDTH TO SELECTED TEXT */
+    max-width: 110px;
+    padding: 2px 2px 2px 3px; /* MINIMAL RIGHT-SIDE PADDING */
     border-radius: 2px;
     border: 1px solid #475569;
     background: #ffffff;
@@ -238,8 +240,10 @@ html, body {
     border-color: #ff6600;
 }
 
+/* ACTION BUTTONS SHRUNK TO FIT TEXT EXACTLY */
 .action-btn {
-    padding: 2px 5px;
+    flex: 0 0 auto; /* PREVENTS STRETCHING */
+    padding: 2px 6px;
     border: none;
     border-radius: 2px;
     font-family: 'Tahoma', Geneva, Verdana, sans-serif;
@@ -247,7 +251,6 @@ html, body {
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
-    flex-shrink: 0;
     transition: background 0.2s ease, transform 0.1s ease;
 }
 
@@ -352,7 +355,7 @@ tr:hover td {
     color: #1e293b;
 }
 
-/* CUSTOM ORANGE SCROLLBAR */
+/* CUSTOM ORANGE SCROLLBAR FOR TABLE DATA ONLY */
 .table-container::-webkit-scrollbar {
     height: 8px;
     width: 6px;
@@ -422,7 +425,7 @@ tr:hover td {
             </div>
         </div>
 
-        <!-- SINGLE-ROW FILTER TOOLBAR (ULTRA COMPACT) -->
+        <!-- SINGLE-ROW FILTER TOOLBAR (TIGHTLY SHRUNK TO FIT TEXT) -->
         <div class="filter-container">
             <input type="text" id="searchInput" placeholder="Search...">
             <select id="branchFilter"><option value="">Branch</option></select>
