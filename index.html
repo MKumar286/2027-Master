@@ -227,7 +227,7 @@ html, body {
 
 .filter-container input[type="text"] {
     flex: 1.2;
-    min-width: 100px;
+    min-width: 90px;
     padding: 5px 6px;
     border-radius: 3px;
     border: 1.5px solid #475569;
@@ -241,8 +241,8 @@ html, body {
 
 .filter-container select {
     flex: 1;
-    min-width: 80px;
-    padding: 5px 4px;
+    min-width: 75px;
+    padding: 5px 3px;
     border-radius: 3px;
     border: 1.5px solid #475569;
     background: #ffffff;
@@ -270,16 +270,22 @@ html, body {
 .multiselect-container {
     position: relative;
     flex: 1;
+    min-width: 80px;
+}
+
+/* Specific shrink rule for Offers box to fit 1 line */
+.multiselect-container[data-key="offers"] {
     min-width: 95px;
+    max-width: 125px;
 }
 
 .select-box {
-    padding: 5px 6px;
+    padding: 5px 4px;
     border-radius: 3px;
     border: 1.5px solid #475569;
     background: #ffffff;
     font-family: Arial, sans-serif;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 800;
     color: #000000;
     cursor: pointer;
@@ -287,6 +293,7 @@ html, body {
     justify-content: space-between;
     align-items: center;
     user-select: none;
+    white-space: nowrap;
 }
 
 .select-box span {
@@ -295,12 +302,18 @@ html, body {
     text-overflow: ellipsis;
 }
 
+.select-box small {
+    font-size: 9px;
+    margin-left: 2px;
+}
+
 .checkboxes-dropdown {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
+    min-width: 130px;
     background: #ffffff;
     border: 1px solid #475569;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -370,7 +383,6 @@ html, body {
    TABLE STYLING
    ========================================== */
 
-/* TABLE CONTAINER & WRAPPER */
 .table-container {
     flex-grow: 1;
     width: 100%;
@@ -383,7 +395,6 @@ html, body {
     padding-bottom: 6px;
 }
 
-/* TABLE SCROLLBAR */
 .table-container::-webkit-scrollbar {
     height: 10px;
     width: 8px;
@@ -403,7 +414,6 @@ html, body {
     background: linear-gradient(90deg, #00c6ff, #0072ff);
 }
 
-/* TABLE STRUCTURE */
 table {
     border-collapse: collapse;
     min-width: 1600px;
@@ -415,7 +425,6 @@ table {
     font-family: Arial, sans-serif;
 }
 
-/* TABLE HEADERS (TH) */
 th {
     padding: 8px 9px;
     font-size: 13px;
@@ -432,7 +441,6 @@ th {
     font-family: Arial, sans-serif;
 }
 
-/* TABLE DATA (TD) */
 td {
     padding: 5px 9px;
     font-size: 12px;
@@ -444,7 +452,6 @@ td {
     color: #222222;
 }
 
-/* ZEBRA STRIPING & HOVER STATES */
 tr:nth-child(even) td { 
     background-color: #eef5ff !important; 
 }
@@ -459,7 +466,6 @@ tbody tr:hover td {
     transition: 0.3s; 
 }
 
-/* LINK BUTTONS INSIDE TABLE DATA */
 .link-btn {
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: #ffffff;
@@ -491,7 +497,6 @@ tbody tr:hover td {
     font-family: Arial, sans-serif;
 }
 
-/* RESPONSIVE TABLE OVERRIDES */
 @media (max-width: 768px) {
     table { 
         min-width: 1400px; 
@@ -590,7 +595,7 @@ tbody tr:hover td {
             <!-- MULTI-SELECT CHECKBOX DROPDOWN FOR OFFERS -->
             <div class="multiselect-container" data-key="offers">
                 <div class="select-box" onclick="toggleMultiDropdown('offers')">
-                    <span id="offersSelectLabel">No. of Offers</span>
+                    <span id="offersSelectLabel">Offers</span>
                     <small>▼</small>
                 </div>
                 <div class="checkboxes-dropdown" id="offersCheckboxes"></div>
@@ -625,9 +630,9 @@ const filterConfigs = [
 
 /* MULTI SELECT FILTER CONFIGURATIONS */
 const multiFilterConfigs = [
-    { key: 'branch', header: 'Branch', containerId: 'branchCheckboxes', labelId: 'branchSelectLabel' },
-    { key: 'dsa', header: 'DSA', containerId: 'dsaCheckboxes', labelId: 'dsaSelectLabel' },
-    { key: 'offers', header: 'No. of Offers', containerId: 'offersCheckboxes', labelId: 'offersSelectLabel' }
+    { key: 'branch', header: 'Branch', containerId: 'branchCheckboxes', labelId: 'branchSelectLabel', shortName: 'Branch' },
+    { key: 'dsa', header: 'DSA', containerId: 'dsaCheckboxes', labelId: 'dsaSelectLabel', shortName: 'DSA' },
+    { key: 'offers', header: 'No. of Offers', containerId: 'offersCheckboxes', labelId: 'offersSelectLabel', shortName: 'Offers' }
 ];
 
 Papa.parse(csvURL, {
@@ -641,6 +646,9 @@ Papa.parse(csvURL, {
 
         headers = results.data[0];
         originalData = results.data.slice(1);
+
+        // Build initial checkbox lists from full dataset so all options remain selectable
+        multiFilterConfigs.forEach(mCfg => buildInitialMultiSelectDropdown(mCfg));
 
         applyFilters();
 
@@ -729,6 +737,45 @@ function getSelectedValues(key) {
     return Array.from(checkboxes).map(cb => cb.value.toLowerCase());
 }
 
+/* BUILD MULTI-SELECT OPTIONS INITIALIZATION */
+function buildInitialMultiSelectDropdown(mCfg) {
+    const container = document.getElementById(mCfg.containerId);
+    const colIdx = getHeaderIndex(mCfg.header);
+
+    if (colIdx === -1) {
+        container.innerHTML = `<label>${mCfg.shortName} (N/A)</label>`;
+        return;
+    }
+
+    let uniqueVals = [...new Set(originalData.map(r => String(r[colIdx] || "").trim()))]
+        .filter(v => v !== undefined && v !== null && v !== "");
+
+    uniqueVals.sort((a, b) => {
+        const numA = Number(a), numB = Number(b);
+        if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+        return a.localeCompare(b);
+    });
+
+    let html = `
+        <label>
+            <input type="checkbox" id="selectAll_${mCfg.key}" onchange="toggleSelectAll('${mCfg.key}', this)" checked>
+            <strong>Select All</strong>
+        </label>
+    `;
+
+    uniqueVals.forEach(val => {
+        html += `
+            <label>
+                <input type="checkbox" class="${mCfg.key}-checkbox" value="${val}" onchange="onMultiCheckboxChange('${mCfg.key}')" checked>
+                ${val}
+            </label>
+        `;
+    });
+
+    container.innerHTML = html;
+    updateMultiSelectLabel(mCfg.key);
+}
+
 /* GET ACTIVE ROWS FILTERED BY ALL FILTERS EXCEPT ONE SPECIFIC KEY */
 function getFilteredRowsExcluding(excludeKey = null) {
     const search = searchInput.value.toLowerCase();
@@ -800,9 +847,8 @@ function getFilteredRowsExcluding(excludeKey = null) {
     });
 }
 
-/* DYNAMICALLY UPDATE DROPDOWN OPTIONS */
+/* DYNAMICALLY UPDATE SINGLE DROPDOWN OPTIONS ONLY */
 function updateDynamicFilterDropdowns() {
-    // 1. Update Standard Single-Select Dropdowns
     filterConfigs.forEach(cfg => {
         const selectEl = document.getElementById(cfg.id);
         if (!selectEl) return;
@@ -838,56 +884,6 @@ function updateDynamicFilterDropdowns() {
 
         selectEl.innerHTML = optionsHTML;
     });
-
-    // 2. Update Multi-Select Checkbox Dropdowns
-    multiFilterConfigs.forEach(mCfg => {
-        updateMultiSelectDropdown(mCfg);
-    });
-}
-
-/* RENDER/UPDATE INDIVIDUAL MULTI-SELECT CHECKBOX DROPDOWN */
-function updateMultiSelectDropdown(mCfg) {
-    const container = document.getElementById(mCfg.containerId);
-    const colIdx = getHeaderIndex(mCfg.header);
-
-    if (colIdx === -1) {
-        container.innerHTML = `<label>${mCfg.header} (N/A)</label>`;
-        return;
-    }
-
-    const matchingRows = getFilteredRowsExcluding(mCfg.key);
-    let uniqueVals = [...new Set(matchingRows.map(r => String(r[colIdx] || "").trim()))]
-        .filter(v => v !== undefined && v !== null && v !== "");
-
-    uniqueVals.sort((a, b) => {
-        const numA = Number(a), numB = Number(b);
-        if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
-        return a.localeCompare(b);
-    });
-
-    const selectAllEl = document.getElementById(`selectAll_${mCfg.key}`);
-    const wasSelectAllChecked = selectAllEl ? selectAllEl.checked : true;
-    const previouslySelected = getSelectedValues(mCfg.key);
-
-    let html = `
-        <label>
-            <input type="checkbox" id="selectAll_${mCfg.key}" onchange="toggleSelectAll('${mCfg.key}', this)" ${wasSelectAllChecked ? 'checked' : ''}>
-            <strong>Select All</strong>
-        </label>
-    `;
-
-    uniqueVals.forEach(val => {
-        const isChecked = wasSelectAllChecked || previouslySelected.includes(val.toLowerCase());
-        html += `
-            <label>
-                <input type="checkbox" class="${mCfg.key}-checkbox" value="${val}" onchange="onMultiCheckboxChange('${mCfg.key}')" ${isChecked ? 'checked' : ''}>
-                ${val}
-            </label>
-        `;
-    });
-
-    container.innerHTML = html;
-    updateMultiSelectLabel(mCfg.key);
 }
 
 /* CHECKBOX INTERACTION HANDLERS */
@@ -919,14 +915,14 @@ function updateMultiSelectLabel(key) {
     const selectAllCb = document.getElementById(`selectAll_${key}`);
     const selected = getSelectedValues(key);
 
-    const defaultTitle = headers[getHeaderIndex(mCfg.header)] || mCfg.header;
+    const title = mCfg.shortName;
 
     if (!selectAllCb || selectAllCb.checked) {
-        label.innerText = `${defaultTitle} (All)`;
+        label.innerText = `${title} (All)`;
     } else if (selected.length === 0) {
-        label.innerText = `${defaultTitle} (None)`;
+        label.innerText = `${title} (None)`;
     } else {
-        label.innerText = `${defaultTitle} (${selected.length})`;
+        label.innerText = `${title} (${selected.length})`;
     }
 }
 
